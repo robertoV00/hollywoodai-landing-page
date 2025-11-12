@@ -15,6 +15,7 @@ import {
   faFacebook,
   faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
+import LoginModal from "@/components/modals/LoginModal";
 
 export default function Home() {
   return (
@@ -35,7 +36,7 @@ export default function Home() {
           <a href="#" className="nav__link">How it works</a>
           <a href="#" className="nav__link">Privacy policy</a>
         </div>
-        <button className="nav__button">Sign In</button>
+        <LoginModal />
       </nav>
 
       {/* Hero */}
