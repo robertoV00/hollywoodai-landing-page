@@ -16,6 +16,7 @@ import {
   faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
 import LoginModal from "@/components/modals/LoginModal";
+import SignUpModal from "@/components/modals/SignUpModal";
 
 export default function Home() {
   return (
