@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
@@ -21,13 +21,27 @@ export default function LoginModal() {
     const [showPassword, setShowPassword] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [errorMsg, setErrorMsg] = useState('') // <-- new
     const isOpen = useSelector((state: RootState) => state.modals.loginModalOpen)
 
     //to use the reducers created in the modalSlice file, we need to use the dispatch hook
     const dispatch: AppDispatch = useDispatch()
 
+    // async function handleLogIn() {
+    //   await signInWithEmailAndPassword(auth, email, password)
+    // }
+
     async function handleLogIn() {
-      await signInWithEmailAndPassword(auth, email, password)
+      try {
+        await signInWithEmailAndPassword(auth, email, password)
+        setErrorMsg('')
+        setEmail('')
+        setPassword('')
+        dispatch(closeLoginModal())
+      } catch (err: any) {
+        const code = err?.code || 'auth/unknown'
+        setErrorMsg(`Firebase: Error (${code})`)
+      }
     }
 
     async function handleGuestLogin() {
@@ -51,8 +65,11 @@ export default function LoginModal() {
                 })
               } 
             }
-          } catch {
+            setErrorMsg('')
+          } catch (err: any) {
             console.error("Google sign-up error")
+            const code = err?.code || 'auth/unknown'
+            setErrorMsg(`Firebase: Error (${code})`)
           }
         }
     
@@ -76,6 +93,17 @@ export default function LoginModal() {
           }
         }
 
+      useEffect(() => {
+        if (!isOpen) {
+          setErrorMsg('')
+          setEmail('')
+          setPassword('')
+        }
+      }, [isOpen])
+      useEffect(() => {
+        if (errorMsg) return // keep if set
+      }, [email, password])
+
   return (
     <>
       <button 
@@ -91,6 +119,11 @@ export default function LoginModal() {
       >
         <div className='w-full h-full sm:w-[400px] sm:h-fit bg-white
         sm: rounded-xl font-inter relative'>
+            {errorMsg && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-50 text-red-700 border border-red-200 px-4 py-2 rounded-md text-sm z-50">
+              {errorMsg}
+            </div>
+            )}
 
             <XMarkIcon
             onClick={() => dispatch(closeLoginModal())}

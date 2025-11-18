@@ -20,19 +20,28 @@ import ForgotPasswordModal from './ForgotPasswordModal'
 export default function SignUpModal() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [errorMsg, setErrorMsg] = useState('') // <-- new
     const isOpen = useSelector((state: RootState) => state.modals.signUpmodalOpen)
 
     //to use the reducers created in the modalSlice file, we need to use the dispatch hook
     const dispatch: AppDispatch = useDispatch()
 
     async function handleSignUp() {
-      const userCredentials = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      )
-
-      dispatch(closeSignUpModal())
+      try {
+        const userCredentials = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        )
+        setEmail('')
+        setPassword('')
+        setErrorMsg('')
+        dispatch(closeSignUpModal())
+      } catch (err: any) {
+        const code = err?.code || 'auth/unknown'
+        // show Firebase style message as requested
+        setErrorMsg(`Firebase: Error (${code})`)
+      }
     }
 
     async function handleGuestLogin() {
@@ -98,6 +107,16 @@ export default function SignUpModal() {
       }
     }
 
+
+    // clear error and inputs whenever modal closes/opens
+    useEffect(() => {
+      if (!isOpen) {
+        setErrorMsg('')
+        setEmail('')
+        setPassword('')
+      }
+    }, [isOpen])
+
   return (
     <>
       {/* <button 
@@ -113,6 +132,13 @@ export default function SignUpModal() {
       >
         <div className='w-full h-full sm:w-[400px] sm:h-fit bg-white
         sm: rounded-xl font-inter relative'>
+
+            {/* error bar */}
+            {errorMsg && (
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-50 text-red-700 border border-red-200 px-4 py-2 rounded-md text-sm z-50">
+                {errorMsg}
+              </div>
+            )}
 
             <XMarkIcon
             onClick={() => dispatch(closeSignUpModal())}
