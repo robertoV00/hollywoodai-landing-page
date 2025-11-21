@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Modal } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
@@ -17,19 +18,15 @@ import { doc, getDoc, setDoc } from 'firebase/firestore'
 
 
 export default function LoginModal() {
-
+    const router = useRouter()
+    
     const [showPassword, setShowPassword] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [errorMsg, setErrorMsg] = useState('') // <-- new
+    const [errorMsg, setErrorMsg] = useState('')
     const isOpen = useSelector((state: RootState) => state.modals.loginModalOpen)
 
-    //to use the reducers created in the modalSlice file, we need to use the dispatch hook
     const dispatch: AppDispatch = useDispatch()
-
-    // async function handleLogIn() {
-    //   await signInWithEmailAndPassword(auth, email, password)
-    // }
 
     async function handleLogIn() {
       try {
@@ -38,6 +35,7 @@ export default function LoginModal() {
         setEmail('')
         setPassword('')
         dispatch(closeLoginModal())
+        router.push('/dashboard')
       } catch (err: any) {
         const code = err?.code || 'auth/unknown'
         setErrorMsg(`Firebase: Error (${code})`)
@@ -45,64 +43,79 @@ export default function LoginModal() {
     }
 
     async function handleGuestLogin() {
-      await signInWithEmailAndPassword(auth, "guest12345@gmail.com", "12345678")
-      dispatch(closeLoginModal())
+      try {
+        await signInWithEmailAndPassword(auth, "guest12345@gmail.com", "12345678")
+        dispatch(closeLoginModal())
+        router.push('/dashboard')
+      } catch (err: any) {
+        const code = err?.code || 'auth/unknown'
+        setErrorMsg(`Firebase: Error (${code})`)
+      }
     }
 
     const provider = new GoogleAuthProvider()
-        const loginWithGoogle = async () => {
-          try{
-            await signInWithPopup(auth, provider)
-            const user = auth.currentUser
-            if(user) {
-              const userDocRef = doc(db, 'users', user.uid)
-              const userDocSnapshot = await getDoc(userDocRef)
-    
-              if(!userDocSnapshot.exists()) {
-                await setDoc(userDocRef, {
-                  userId: user.uid,
-                  email: user.email
-                })
-              } 
-            }
-            setErrorMsg('')
-          } catch (err: any) {
-            console.error("Google sign-up error")
-            const code = err?.code || 'auth/unknown'
-            setErrorMsg(`Firebase: Error (${code})`)
-          }
-        }
-    
-        async function handleGoogleSignUp() {
-          try{
-            await signInWithPopup(auth, provider)
-            const user = auth.currentUser
-            if(user) {
-              const userDocRef = doc(db, 'users', user.uid)
-              const userDocSnapshot = await getDoc(userDocRef)
-    
-              if(!userDocSnapshot.exists()) {
-                await setDoc(userDocRef, {
-                  userId: user.uid,
-                  email: user.email
-                })
-              } 
-            }
-          } catch {
-            console.error("Google sign-up error")
-          }
-        }
+    const loginWithGoogle = async () => {
+      try{
+        await signInWithPopup(auth, provider)
+        const user = auth.currentUser
+        if(user) {
+          const userDocRef = doc(db, 'users', user.uid)
+          const userDocSnapshot = await getDoc(userDocRef)
 
-      useEffect(() => {
-        if (!isOpen) {
-          setErrorMsg('')
-          setEmail('')
-          setPassword('')
+          if(!userDocSnapshot.exists()) {
+            await setDoc(userDocRef, {
+              userId: user.uid,
+              email: user.email
+            })
+          } 
         }
-      }, [isOpen])
-      useEffect(() => {
-        if (errorMsg) return // keep if set
-      }, [email, password])
+        setErrorMsg('')
+        dispatch(closeLoginModal())
+        router.push('/dashboard')
+      } catch (err: any) {
+        console.error("Google sign-up error")
+        const code = err?.code || 'auth/unknown'
+        setErrorMsg(`Firebase: Error (${code})`)
+      }
+    }
+
+    async function handleGoogleSignUp() {
+      try{
+        await signInWithPopup(auth, provider)
+        const user = auth.currentUser
+        if(user) {
+          const userDocRef = doc(db, 'users', user.uid)
+          const userDocSnapshot = await getDoc(userDocRef)
+
+          if(!userDocSnapshot.exists()) {
+            await setDoc(userDocRef, {
+              userId: user.uid,
+              email: user.email
+            })
+          } 
+        }
+        setErrorMsg('')
+        setEmail('')
+        setPassword('')
+        dispatch(closeLoginModal())
+        router.push('/dashboard')
+      } catch (err: any) {
+        const code = err?.code || 'auth/unknown'
+        setErrorMsg(`Firebase: Error (${code})`)
+      }
+    }
+
+    useEffect(() => {
+      if (!isOpen) {
+        setErrorMsg('')
+        setEmail('')
+        setPassword('')
+      }
+    }, [isOpen])
+    
+    useEffect(() => {
+      if (errorMsg) return
+    }, [email, password])
 
   return (
     <>
@@ -151,8 +164,7 @@ export default function LoginModal() {
                 </button>
               </div>
 
-              <hr>
-              </hr>
+              <hr></hr>
 
               <div className='w-20 text-center flex justify-center mx-auto relative -top-5 text-gray-500' >
                 <h4 className='p-2 w-14 text-center bg-white'>

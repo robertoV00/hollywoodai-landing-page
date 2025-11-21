@@ -204,7 +204,7 @@ export default function SignUpModal() {
 
                 <p className='flex justify-center'>
                   Already have an account?
-                  <span className='text-[16px] text-blue-600 underline'
+                  <span className='text-[16px] text-blue-600 underline cursor-pointer'
                   onClick={() => {
                     dispatch(closeSignUpModal())
                     dispatch(openLoginModal())

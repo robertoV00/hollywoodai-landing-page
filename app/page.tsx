@@ -52,7 +52,7 @@ export default function Home() {
           </div>
           <h1 className="header__title">
             Ultimate AI <br />
-            Summariser
+            Summarizer
             <Image 
               src="/assets/bolt.svg" 
               alt="Bolt icon" 
@@ -62,7 +62,7 @@ export default function Home() {
             />
           </h1>
           <p className="header__paragraph">
-            All-in-one platform to watch your favourite movies in minutes using AI.
+            All-in-one platform to watch your favorite movies in minutes using AI.
           </p>
           <a className="header__button">
             <div className="header__button__iconWrapper">
