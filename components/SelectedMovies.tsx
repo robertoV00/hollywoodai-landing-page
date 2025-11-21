@@ -63,7 +63,7 @@ export default function SelectedMovies() {
         <div className='blaze-slider'>
           <div className='blaze-container w-full'>
             <div className='blaze-track-container'>
-              <div className='blaze-track relative flex gap-4 h-[550px]'>
+              <div className='blaze-track relative flex gap-4 h-[450px]'>
                 {movies.map((movie) => (
 
                   <div key={movie.id} className='flex-shrink-0 w-[160px] h-[350px]'>
