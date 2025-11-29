@@ -12,6 +12,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     const data = await response.json()
     const movie = data.data
 
+    console.log(data)
+
     if (!movie) {
         return <div>Movie not found</div>
     }
@@ -45,9 +47,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                             
                             <div className='flex items-center gap-2'>
                                 <MicrophoneIcon className='h-5 w-5'/>
-                                <span className='text-sm'>Audio & text</span>
+                                <span className='text-sm'>{movie.type}</span>
                                 <CalendarDateRangeIcon className='h-5 w-5'/>
-                                <span className='text-sm'>2009</span>
+                                <span className='text-sm'>{movie.releaseYear}</span>
                             </div>
                         </div>
 
@@ -56,15 +58,19 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 Summarize <BoltIcon height={20}/>
                             </button>
                             <button className='text-blue-500 font-semibold flex items-center mt-2 mb-4 ml-0'>
-                                <BookmarkIcon height={30} className='pr-3'/> Remove from Favourites
+                                <BookmarkIcon height={30} className='pr-3'/> Remove from Favorites
                             </button>
                         </div>
 
                         <div>
                             <h2 className='text-xl font-bold mb-4'>What's it about?</h2>
                             <div className='flex gap-2 mb-4'>
-                                <span className='bg-gray-100 px-3 py-1 rounded text-sm'>Action</span>
-                                <span className='bg-gray-100 px-3 py-1 rounded text-sm'>Adventure</span>
+                              {(Array.isArray(movie.tags)
+                                ? movie.tags
+                                : (typeof movie.tags === 'string' ? movie.tags.split(',').map((t:string)=>t.trim()) : [])
+                              ).map((tag: string) => (
+                                <span key={tag} className='bg-gray-100 px-3 py-1 rounded text-sm'>{tag}</span>
+                              ))}
                             </div>
                             <p className='text-gray-700 text-sm leading-relaxed'>
                                 {movie.movieDescription}
