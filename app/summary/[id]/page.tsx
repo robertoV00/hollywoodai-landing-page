@@ -8,9 +8,9 @@ export default async function Page({ params }: { params: { id: string } }) {
     const movieId = params.id
     
     // Fetch movie data using movieId
-    const response = await fetch(`https://advanced-internship-api-production.up.railway.app/selectedMovies`)
+    const response = await fetch(`https://advanced-internship-api-production.up.railway.app/movies/${movieId}`)
     const data = await response.json()
-    const movie = data.data.find((m: any) => m.id === movieId)
+    const movie = data.data
 
     if (!movie) {
         return <div>Movie not found</div>
@@ -53,7 +53,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                         <div className='flex gap-4 mb-8 flex-col'>
                             <button className='bg-purple-950 text-white px-8 py-2 rounded-md font-semibold flex items-center gap-2 justify-center h-[60px] w-[300px]'>
-                                Summarise <BoltIcon height={20}/>
+                                Summarize <BoltIcon height={20}/>
                             </button>
                             <button className='text-blue-500 font-semibold flex items-center mt-2 mb-4 ml-0'>
                                 <BookmarkIcon height={30} className='pr-3'/> Remove from Favourites
@@ -67,13 +67,13 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 <span className='bg-gray-100 px-3 py-1 rounded text-sm'>Adventure</span>
                             </div>
                             <p className='text-gray-700 text-sm leading-relaxed'>
-                                Movie description here
+                                {movie.movieDescription}
                             </p>
                         </div>
                     </div>
 
                     <div className='flex-shrink-0'>
-                        <div className='w-64 h-80 bg-gray-200 rounded-lg overflow-hidden'>
+                        <div className='w-50 h-80 bg-gray-200 rounded-lg overflow-hidden'>
                             <Image 
                             src={movie.imageLink}
                             alt={movie.title}
