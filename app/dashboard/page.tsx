@@ -7,10 +7,11 @@ import Sidebar from '@/components/Sidebar'
 export default function page() {
   return (
     <>
+    <div className='flex mx-auto min-h-screen'>
         <Sidebar />
         <Dashboard />
-        <SelectedMovies />
-        <TopMovies />
+
+    </div>
     </>
   )
 }

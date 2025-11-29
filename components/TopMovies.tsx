@@ -73,7 +73,7 @@ export default function TopMovies() {
 
               {movies.map((movie) => (
                 <div key={movie.id} className='flex-shrink-0 w-[160px]'>
-                  <div className='relative w-full h-[350px] group cursor-pointer rounded-lg overflow-hidden'>
+                  <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden'>
                     <Image
                       src={movie.imageLink}
                       alt={movie.title}

@@ -5,6 +5,7 @@ import BlazeSlider from 'blaze-slider'
 import 'blaze-slider/dist/blaze.css'
 import Image from 'next/image'
 import { ClockIcon, StarIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
 
 interface Movie {
   id: string
@@ -17,6 +18,8 @@ interface Movie {
 export default function SelectedMovies() {
   const [movies, setMovies] = useState<Movie[]>([])
   const [loading, setLoading] = useState(true)
+  const [slidesToShow, setSlidesToShow] = useState(7)
+  const router = useRouter()
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -35,12 +38,32 @@ export default function SelectedMovies() {
   }, [])
 
   useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setSlidesToShow(2)
+      } else if (window.innerWidth < 768) {
+        setSlidesToShow(3)
+      } else if (window.innerWidth < 1024) {
+        setSlidesToShow(4)
+      } else if (window.innerWidth < 1280) {
+        setSlidesToShow(5)
+      } else {
+        setSlidesToShow(7)
+      }
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
     if (movies.length > 0) {
       const el = document.querySelector('.blaze-slider')
       if (el) {
         new BlazeSlider(el, {
             all: {
-                slidesToShow: 7,
+                slidesToShow: slidesToShow,
                 slideGap: "16px",
                 transitionDuration: 500,
                 loop: false,      
@@ -48,7 +71,7 @@ export default function SelectedMovies() {
         })
       }
     }
-  }, [movies])
+  }, [movies, slidesToShow])
 
   if (loading) {
     return <div className="p-8">Loading...</div>
@@ -62,11 +85,11 @@ export default function SelectedMovies() {
 
         <div className='blaze-slider'>
           <div className='blaze-container w-full'>
-            <div className='blaze-track-container'>
+            <div className='blaze-track-container h-[350px]'>
               <div className='blaze-track relative flex gap-4 h-[450px]'>
                 {movies.map((movie) => (
 
-                  <div key={movie.id} className='flex-shrink-0 w-[160px] h-[350px]'>
+                  <div key={movie.id} className='flex-shrink-0 w-[160px] h-[250px]' onClick={() => router.push(`/summary/${movie.id}`)}>
 
 
                         <div className='relative w-full h-full group cursor-pointer rounded-lg overflow-hidden'>
