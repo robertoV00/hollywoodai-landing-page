@@ -4,9 +4,17 @@ import { BoltIcon, BookmarkIcon, CalendarDateRangeIcon, MicrophoneIcon } from '@
 import React from 'react'
 import Image from 'next/image'
 
-export default function page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { id: string } }) {
     const movieId = params.id
-    // use movieId to fetch movie data
+    
+    // Fetch movie data using movieId
+    const response = await fetch(`https://advanced-internship-api-production.up.railway.app/selectedMovies`)
+    const data = await response.json()
+    const movie = data.data.find((m: any) => m.id === movieId)
+
+    if (!movie) {
+        return <div>Movie not found</div>
+    }
   
     return (
     <>
@@ -23,14 +31,14 @@ export default function page({ params }: { params: { id: string } }) {
                 <div className='p-14 pl-40 pr-40 flex gap-8'>
                     <div className='flex-1'>
                         <div className='border-b-2'>
-                            <h1 className='text-4xl font-bold mb-2'>Avatar</h1>
-                            <p className='text-gray-500 mb-6'>James Cameron</p>
+                            <h1 className='text-4xl font-bold mb-2'>{movie.title}</h1>
+                            <p className='text-gray-500 mb-6'>{movie.director}</p>
                         </div>
 
                         <div className='flex gap-5 mb-8 border-b-2 flex-col pt-8 pb-8'>
                             <div className='flex items-center gap-2'>
                                 <StarIcon className='h-5 w-5'/>
-                                <span className='text-sm'>7.9 / 10</span>
+                                <span className='text-sm'>{movie.rating} / 10</span>
                                 <ClockIcon className='h-5 w-5'/>
                                 <span className='text-sm'>10:00</span>
                             </div>
@@ -41,7 +49,6 @@ export default function page({ params }: { params: { id: string } }) {
                                 <CalendarDateRangeIcon className='h-5 w-5'/>
                                 <span className='text-sm'>2009</span>
                             </div>
-                            
                         </div>
 
                         <div className='flex gap-4 mb-8 flex-col'>
@@ -58,11 +65,9 @@ export default function page({ params }: { params: { id: string } }) {
                             <div className='flex gap-2 mb-4'>
                                 <span className='bg-gray-100 px-3 py-1 rounded text-sm'>Action</span>
                                 <span className='bg-gray-100 px-3 py-1 rounded text-sm'>Adventure</span>
-                                <span className='bg-gray-100 px-3 py-1 rounded text-sm'>Fantasy</span>
-                                <span className='bg-gray-100 px-3 py-1 rounded text-sm'>Sci-Fi</span>
                             </div>
                             <p className='text-gray-700 text-sm leading-relaxed'>
-                                When his brother is killed in a robbery, paraplegic Marine Jake Sully decides to take his place in a mission on the distant world of Pandora. There he learns of greedy corporate figurehead Parker Selfridge's intentions of driving off the native humanoid "Na'vi" in order to mine for the precious material scattered throughout their rich woodland. In exchange for the spinal surgery that will fix his legs, Jake gathers knowledge of the Indigenous Race and their Culture, for the cooperating military unit spearheaded by gung-ho Colonel Quaritch, while simultaneously attempting to infiltrate the Na'vi people with the use of an "avatar" identity. While Jake begins to bond with the native tribe and quickly falls in love with the beautiful alien Neytiri, the restless Colonel moves forward with his ruthless extermination tactics, forcing the soldier to take a stand - and fight back in an epic battle for the fate of Pandora.—The Massie Twins
+                                Movie description here
                             </p>
                         </div>
                     </div>
@@ -70,8 +75,8 @@ export default function page({ params }: { params: { id: string } }) {
                     <div className='flex-shrink-0'>
                         <div className='w-64 h-80 bg-gray-200 rounded-lg overflow-hidden'>
                             <Image 
-                            src="/assets/avatar.jpg"
-                            alt="Avatar"
+                            src={movie.imageLink}
+                            alt={movie.title}
                             width={256}
                             height={384}
                             className='w-full h-full object-cover'
