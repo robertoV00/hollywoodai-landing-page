@@ -6,6 +6,8 @@ import 'blaze-slider/dist/blaze.css'
 import Image from 'next/image'
 import { ClockIcon, StarIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 interface Movie {
   id: string
@@ -13,6 +15,8 @@ interface Movie {
   director: string
   imageLink: string
   rating: string
+  subscriptionRequired: boolean
+
 }
 
 export default function SelectedMovies() {
@@ -20,6 +24,8 @@ export default function SelectedMovies() {
   const [loading, setLoading] = useState(true)
   const [slidesToShow, setSlidesToShow] = useState(7)
   const router = useRouter()
+  const user = useSelector((state: RootState) => state.user)
+  const isSubscribed = user?.isSubscribed || false
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -85,21 +91,27 @@ export default function SelectedMovies() {
 
         <div className='blaze-slider'>
           <div className='blaze-container w-full'>
-            <div className='blaze-track-container h-[350px]'>
+            <div className='blaze-track-container h-[350px] relative top-4'>
               <div className='blaze-track relative flex gap-4 h-[450px]'>
                 {movies.map((movie) => (
-
+                  
                   <div key={movie.id} className='flex-shrink-0 w-[160px] h-[250px]' onClick={() => router.push(`/summary/${movie.id}`)}>
 
 
                         <div className='relative w-full h-full group cursor-pointer rounded-lg overflow-hidden'>
-                        
+
+                        {/* Premium pill */}
+                        {!isSubscribed && movie.subscriptionRequired && (
+                          <div className='absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
+                            Premium
+                          </div>
+                        )}
                         <Image
                             src={movie.imageLink}
                             alt={movie.title}
                             fill
                             className='object-cover'
-                        />
+                            />
                         
                         {/* Hover overlay */}
                         <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100'>

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Provider } from "react-redux";
 import StoreProvider from "@/redux/StoreProvider";
+import { AudioPlayerProvider } from "./context/audio-player-context";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,9 +20,11 @@ export default function RootLayout({
 }) {
   return (
     <StoreProvider>
-      <html lang="en">
-        <body className={inter.className}>{children}</body>
-      </html>
+      {/* <AudioPlayerProvider> */}
+        <html lang="en">
+          <body className={inter.className}>{children}</body>
+        </html>
+      {/* </AudioPlayerProvider> */}
     </StoreProvider>
   )
 }

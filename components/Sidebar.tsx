@@ -17,15 +17,15 @@ export default function Sidebar() {
                     />
                 </div>
                 <div className='p-3 text-[12px]'>LINKS</div>
-                <ul>
-                    <SidebarLink Icon={Squares2X2Icon} text="Dashboard"/>
+                <ul className='cursor-pointer'>
+                    <SidebarLink Icon={Squares2X2Icon} text="Dashboard" href="/dashboard"/>
                     <SidebarLink Icon={BookmarkIcon} text="Favorites"/>
                     <SidebarLink Icon={MagnifyingGlassIcon} text="Search"/>
                     <SidebarLink Icon={ArrowTrendingUpIcon} text="Trending"/>
                 </ul>
 
                 <div className='p-3 mt-8 text-[12px]'>EXTRAS</div>
-                <ul>
+                <ul className='cursor-pointer'>
                     <SidebarLink Icon={QuestionMarkCircleIcon} text="Help & Support"/>
                     <SidebarLink Icon={Cog6ToothIcon} text="Settings"/>
                     <SidebarLink Icon={UserCircleIcon} text="Log out"/>
