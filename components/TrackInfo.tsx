@@ -14,25 +14,34 @@ interface TrackInfoProps {
 export const TrackInfo = ({ movieId }: TrackInfoProps) => {
 
   const [movie, setMovie] = useState<any>(null)
-  const { currentTrack } = useAudioPlayerContext();
+  const { currentTrack, setCurrentTrack } = useAudioPlayerContext();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-      const fetchMovie = async () => {
-        try {
-          const response = await fetch(`https://advanced-internship-api-production.up.railway.app/movies/${movieId}`)
-          const data = await response.json()
-          setMovie(data.data)
-        } catch (error) {
-          console.error('Error fetching movie:', error)
-        } finally {
-          setLoading(false)
+    const fetchMovie = async () => {
+      try {
+        const response = await fetch(`https://advanced-internship-api-production.up.railway.app/movies/${movieId}`)
+        const data = await response.json()
+        setMovie(data.data)
+        
+        // Set the current track with audio from API
+        if (data.data) {
+          setCurrentTrack({
+            title: data.data.title,
+            src: data.data.audioLink,
+            author: data.data.director,
+            thumbnail: data.data.imageLink
+          })
         }
+      } catch (error) {
+        console.error('Error fetching movie:', error)
+      } finally {
+        setLoading(false)
       }
-      fetchMovie()
-    }, [movieId])
+    }
+    fetchMovie()
+  }, [movieId, setCurrentTrack])
   
-  console.log(movie)
 
   if (loading) return <div className="text-white">Loading...</div>;
 

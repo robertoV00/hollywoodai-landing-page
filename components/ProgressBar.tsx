@@ -15,6 +15,8 @@ export const ProgressBar = () =>{
       `${(newTime / duration) * 100}%`
     );
   }
+
+  
 };
 
   const formatTime = (time: number | undefined): string => {
@@ -30,10 +32,10 @@ export const ProgressBar = () =>{
     };
 
   return (
-    <div className="flex items-center justify-center gap-5 w-full">
+    <div className="progress-bar-container flex items-center justify-center gap-5 w-full text-white">
       <span>{formatTime(timeProgress)}</span>
       <input
-        className="max-w-[80%] bg-gray-300"
+        className="progress-bar max-w-[100%] bg-gray-300 h-1"
         ref={progressBarRef}
         type="range"
         defaultValue="0"

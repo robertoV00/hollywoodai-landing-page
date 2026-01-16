@@ -1,5 +1,6 @@
 'use client'
 
+import { fetchTracks } from '@/data/tracks';
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Sidebar from '@/components/Sidebar'
@@ -13,6 +14,9 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
   const movieId = params.id
   const [movie, setMovie] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [tracks, setTracks] = useState<any[]>([])
+
+
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -20,6 +24,8 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
         const response = await fetch(`https://advanced-internship-api-production.up.railway.app/movies/${movieId}`)
         const data = await response.json()
         setMovie(data.data)
+        const fetchedTracks = await fetchTracks(movieId)
+        setTracks(fetchedTracks)
       } catch (error) {
         console.error('Error fetching movie:', error)
       } finally {
@@ -38,7 +44,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <AudioPlayerProvider>
+    <AudioPlayerProvider initialTracks={tracks}>
       <div className='flex h-screen bg-white'>
         <Sidebar />
         
@@ -62,11 +68,10 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
           <div className='bg-gray-800 border-t border-gray-700 p-2'>
             <div className='max-w-6xl mx-auto flex items-center justify-between'>
               {/* Track Info - Left */}
-              <div className='flex-shrink-0 flex items-center'>
+              <div className='flex-shrink-0 flex items-center text-white'>
                 <TrackInfo movieId={params.id} />
                 <div>
-                  <h3 className='text-white'>{movie.title}</h3>
-                  <h3 className='text-blue-200'>{movie.director}</h3>
+                  
                 </div>
               </div>
 

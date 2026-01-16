@@ -139,6 +139,8 @@ useEffect(() => {
     };
     }, [isPlaying, startAnimation, updateProgress, audioRef]);
 
+    
+
   return (
 
     <div className="flex gap-4 items-center">

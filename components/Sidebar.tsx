@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { ArrowTrendingUpIcon, BookmarkIcon, HomeIcon, MagnifyingGlassIcon, QuestionMarkCircleIcon, Squares2X2Icon, UserCircleIcon } from '@heroicons/react/24/outline'
 import { Cog6ToothIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
@@ -19,38 +20,41 @@ export default function Sidebar() {
                 <div className='p-3 text-[12px]'>LINKS</div>
                 <ul className='cursor-pointer'>
                     <SidebarLink Icon={Squares2X2Icon} text="Dashboard" href="/dashboard"/>
-                    <SidebarLink Icon={BookmarkIcon} text="Favorites"/>
-                    <SidebarLink Icon={MagnifyingGlassIcon} text="Search"/>
-                    <SidebarLink Icon={ArrowTrendingUpIcon} text="Trending"/>
+                    <SidebarLink Icon={BookmarkIcon} text="Favorites" href="/favorites"/>
+                    <SidebarLink Icon={MagnifyingGlassIcon} text="Search" href="/search"/>
+                    <SidebarLink Icon={ArrowTrendingUpIcon} text="Trending" href="/trending"/>
                 </ul>
 
                 <div className='p-3 mt-8 text-[12px]'>EXTRAS</div>
                 <ul className='cursor-pointer'>
-                    <SidebarLink Icon={QuestionMarkCircleIcon} text="Help & Support"/>
-                    <SidebarLink Icon={Cog6ToothIcon} text="Settings"/>
-                    <SidebarLink Icon={UserCircleIcon} text="Log out"/>
+                    <SidebarLink Icon={QuestionMarkCircleIcon} text="Help & Support" href="/help"/>
+                    <SidebarLink Icon={Cog6ToothIcon} text="Settings" href="/settings"/>
+                    <SidebarLink Icon={UserCircleIcon} text="Log out" href="/logout"/>
                 </ul>
             </div>
         </nav>
-
     </>
   )
 }
 
 interface SidebarLinkProps {
     text: string;
+    href: string;
     Icon: React.ForwardRefExoticComponent<Omit<React.SVGProps<SVGSVGElement>, "ref"> & {
     title?: string;
     titleId?: string;
 } & React.RefAttributes<SVGSVGElement>>;
 }
 
-
-function SidebarLink({text, Icon}: SidebarLinkProps) {
-    return <li className='flex items-center space-x-3 p-2.5'>
-            <Icon className='h-[20px]'/>
-            <span className='text-[14px] text-nowrap'>
-                {text}
-            </span>
-        </li>
+function SidebarLink({text, Icon, href}: SidebarLinkProps) {
+    return (
+        <Link href={href}>
+            <li className='flex items-center space-x-3 p-2.5'>
+                <Icon className='h-[20px]'/>
+                <span className='text-[14px] text-nowrap'>
+                    {text}
+                </span>
+            </li>
+        </Link>
+    )
 }

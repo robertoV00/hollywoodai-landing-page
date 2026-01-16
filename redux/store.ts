@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import modalSlice from "./slices/modalSlice"
 import userSlice from './slices/userSlice'
+import favoritesSlice from './slices/favoritesSlice'
 
 export const store = configureStore({
   reducer: {
     modals: modalSlice,
-    user: userSlice
+    user: userSlice,
+    favorites: favoritesSlice
   },
 })
 

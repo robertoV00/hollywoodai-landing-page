@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
 import { openLoginModal } from '@/redux/slices/modalSlice'
+import { addFavorite, removeFavorite } from '@/redux/slices/favoritesSlice'
 import { auth } from '@/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 
@@ -17,6 +18,7 @@ export default function Page({ params }: { params: { id: string } }) {
     const router = useRouter()
     const dispatch: AppDispatch = useDispatch()
     const user = useSelector((state: RootState) => state.user)
+    const favorites = useSelector((state: RootState) => state.favorites.movies)
     const isSubscribed = Boolean(user?.isSubscribed)
     
     const [movie, setMovie] = useState<any>(null)
@@ -37,6 +39,9 @@ export default function Page({ params }: { params: { id: string } }) {
           const response = await fetch(`https://advanced-internship-api-production.up.railway.app/movies/${movieId}`)
           const data = await response.json()
           setMovie(data.data)
+          // Check if movie is already favorited
+          const isFav = favorites.some(fav => fav.id === data.data.id)
+          setIsFavorited(isFav)
         } catch (error) {
           console.error('Error fetching movie:', error)
         } finally {
@@ -44,7 +49,7 @@ export default function Page({ params }: { params: { id: string } }) {
         }
       }
       fetchMovie()
-    }, [movieId])
+    }, [movieId, favorites])
 
     const handleSummarizeClick = () => {
       // Not logged in - show login modal
@@ -74,22 +79,13 @@ export default function Page({ params }: { params: { id: string } }) {
       // Logged in - toggle favorite
       setIsFavorited(!isFavorited)
       
-      // Save to local storage or your backend
-      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
-      
       if (!isFavorited) {
         // Add to favorites
-        if (!favorites.some((fav: any) => fav.id === movie.id)) {
-          favorites.push(movie)
-        }
+        dispatch(addFavorite(movie))
       } else {
         // Remove from favorites
-        const updatedFavorites = favorites.filter((fav: any) => fav.id !== movie.id)
-        favorites.length = 0
-        favorites.push(...updatedFavorites)
+        dispatch(removeFavorite(movie.id))
       }
-      
-      localStorage.setItem('favorites', JSON.stringify(favorites))
     }
 
     if (loading) {
@@ -144,7 +140,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             </button>
                             <button 
                               onClick={handleFavoriteClick}
-                              className={`font-semibold flex items-center mt-2 mb-4 ml-0 ${isFavorited ? 'text-red-500' : 'text-blue-500'}`}>
+                              className={`favorite-button font-semibold flex items-center mt-2 mb-4 ml-0 ${isFavorited ? 'text-red-500' : 'text-blue-500'}`}>
                                 <BookmarkIcon height={30} className='pr-3'/> {isFavorited ? 'Remove from Favorites' : 'Add to Favorites'}
                             </button>
                         </div>

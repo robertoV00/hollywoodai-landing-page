@@ -9,6 +9,7 @@ import {
   SetStateAction,
   useRef,
   RefObject,
+  useEffect,
 } from 'react';
 import { tracks } from '../../data/tracks';
 
@@ -40,18 +41,22 @@ const AudioPlayerContext = createContext<
   AudioPlayerContextType | undefined
 >(undefined);
 
+interface AudioPlayerProviderProps {
+  children: ReactNode;
+  initialTracks?: Track[];
+}
 
 export const AudioPlayerProvider = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+    children,
+  initialTracks = []
+}: AudioPlayerProviderProps) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [timeProgress, setTimeProgress] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [trackIndex, setTrackIndex] = useState<number>(0);
+  const [tracks, setTracks] = useState<Track[]>(initialTracks);
   const [currentTrack, setCurrentTrack] = useState<Track>(
-    tracks[trackIndex]
+    initialTracks.length > 0 ? initialTracks[0] : { title: '', src: '', author: '' }
   );
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressBarRef = useRef<HTMLInputElement>(null);
@@ -70,12 +75,20 @@ export const AudioPlayerProvider = ({
     setIsPlaying,
   };
   
+  useEffect(() => {
+    if (initialTracks.length > 0) {
+      setTracks(initialTracks);
+      setCurrentTrack(initialTracks[0]);
+    }
+  }, [initialTracks]);
+
   return (
     <AudioPlayerContext.Provider value={contextValue}>
       <audio ref={audioRef} />
       {children}
     </AudioPlayerContext.Provider>
   );
+  
 };
 
 
