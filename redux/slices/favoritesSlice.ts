@@ -26,13 +26,25 @@ const favoritesSlice = createSlice({
       const exists = state.movies.some(movie => movie.id === action.payload.id)
       if (!exists) {
         state.movies.push(action.payload)
+        // Save to localStorage
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('favorites', JSON.stringify(state.movies))
+        }
       }
     },
     removeFavorite: (state, action: PayloadAction<string>) => {
       state.movies = state.movies.filter(movie => movie.id !== action.payload)
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favorites', JSON.stringify(state.movies))
+      }
     },
     setFavorites: (state, action: PayloadAction<Movie[]>) => {
       state.movies = action.payload
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favorites', JSON.stringify(state.movies))
+      }
     }
   }
 })
