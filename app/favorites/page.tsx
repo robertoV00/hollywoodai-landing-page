@@ -109,29 +109,31 @@ export default function Favorites() {
             <div className="slider-row">
               <div className='blaze-slider w-full'>
                 <div className='blaze-container w-full'>
-                  <div className='blaze-track-container h-[350px] relative top-4'>
-                    <div className='blaze-track relative h-[450px]' style={{ width: `${movies.length * 160 + (movies.length - 1) * 16}px` }}>
+                  <div className='blaze-track-container h-[360px] relative top-4'>
+                    <div className='blaze-track relative h-[470px]' style={{ width: `${movies.length * 160 + (movies.length - 1) * 16}px` }}>
                       {/* dynamic width sizing ^ */}
                       {movies.map((movie) => (
                         
-                        <div key={movie.id} className='movie-box flex-shrink-0 w-[160px] h-[240px]' onClick={() => router.push(`/summary/${movie.id}`)}>
+                        <div key={movie.id} className='movie-box flex-shrink-0 w-[160px] h-[260px] relative top-4' onClick={() => router.push(`/summary/${movie.id}`)}>
 
 
-                              <div className='premium-pill relative w-full h-full group cursor-pointer rounded-lg overflow-hidden'>
+                              <div className='premium-pill w-full h-full group cursor-pointer rounded-lg overflow-hidden'>
 
-                              {/* Premium pill */}
-                              {!isSubscribed && movie.subscriptionRequired && (
-                                <div className='absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
-                                  Premium
-                                </div>
-                              )}
+                                {/* Premium pill */}
+                                {!isSubscribed && movie.subscriptionRequired && (
+                                  <div className='premium-pill absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10'>
+                                    Premium
+                                  </div>
+                                )}
                               <Image
                                   src={movie.imageLink}
                                   alt={movie.title}
                                   fill
-                                  className='object-cover'
+                                  className='object-cover rounded-2xl'
                                   />
                               
+
+
                               {/* Hover overlay */}
                               <div className='hover-overlay-container absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100'>
                                   <h3 className='text-white text-sm font-bold mb-1 line-clamp-2'>{movie.title}</h3>
@@ -142,8 +144,6 @@ export default function Favorites() {
                                   </div>
                                   
                               </div>
-
-
                               </div>
                               <div className='relative inset-0 bg-black bg-opacity-0 transition-all duration-300 flex flex-col justify-end p-3'>
                                   <h3 className='text-black text-sm text-[17px] font-bold mb-1 line-clamp-2'>{movie.title}</h3>
@@ -160,7 +160,7 @@ export default function Favorites() {
                               </div>
                           </div>
 
-                        
+
                       ))}
                     </div>
                   </div>

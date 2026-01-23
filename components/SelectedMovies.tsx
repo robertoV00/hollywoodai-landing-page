@@ -95,17 +95,17 @@ export default function SelectedMovies() {
               <div className='blaze-track relative flex gap-4 h-[450px]'>
                 {movies.map((movie) => (
                   
-                  <div key={movie.id} className='flex-shrink-0 w-[160px] h-[250px]' onClick={() => router.push(`/summary/${movie.id}`)}>
-
-
-                        <div className='relative w-full h-full group cursor-pointer rounded-lg overflow-hidden'>
+                  <div key={movie.id} className='flex-shrink-0 w-[160px] h-[250px] relative' onClick={() => router.push(`/summary/${movie.id}`)}>
 
                         {/* Premium pill */}
                         {!isSubscribed && movie.subscriptionRequired && (
-                          <div className='absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
+                          <div className='absolute -top-0 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
                             Premium
                           </div>
                         )}
+
+                        <div className='relative w-full h-full group cursor-pointer rounded-lg overflow-hidden top-3'>
+
                         <Image
                             src={movie.imageLink}
                             alt={movie.title}

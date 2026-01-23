@@ -15,6 +15,7 @@ import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndP
 import { auth, db } from '@/firebase'
 import Image from 'next/image'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { signInUser } from '@/redux/slices/userSlice'
 
 
 export default function LoginModal() {
@@ -30,7 +31,18 @@ export default function LoginModal() {
 
     async function handleLogIn() {
       try {
-        await signInWithEmailAndPassword(auth, email, password)
+        const userCredential = await signInWithEmailAndPassword(auth, email, password)
+        const user = userCredential.user
+        
+        // Dispatch sign in action with user data
+        dispatch(signInUser({
+          name: user.displayName || email.split('@')[0],
+          username: user.displayName || email.split('@')[0],
+          email: user.email,
+          uid: user.uid,
+          isSubscribed: true
+        }))
+        
         setErrorMsg('')
         setEmail('')
         setPassword('')
@@ -44,7 +56,18 @@ export default function LoginModal() {
 
     async function handleGuestLogin() {
       try {
-        await signInWithEmailAndPassword(auth, "guest12345@gmail.com", "12345678")
+        const userCredential = await signInWithEmailAndPassword(auth, "guest12345@gmail.com", "12345678")
+        const user = userCredential.user
+        
+        // Dispatch sign in action with user data
+        dispatch(signInUser({
+          name: user.displayName || 'Guest',
+          username: user.displayName || 'Guest',
+          email: user.email,
+          uid: user.uid,
+          isSubscribed: true
+        }))
+        
         dispatch(closeLoginModal())
         router.push('/dashboard')
       } catch (err: any) {
@@ -67,7 +90,16 @@ export default function LoginModal() {
               userId: user.uid,
               email: user.email
             })
-          } 
+          }
+          
+          // Dispatch sign in action with user data
+          dispatch(signInUser({
+            name: user.displayName || user.email?.split('@')[0] || 'User',
+            username: user.displayName || user.email?.split('@')[0] || 'User',
+            email: user.email || '',
+            uid: user.uid,
+            isSubscribed: true
+          }))
         }
         setErrorMsg('')
         dispatch(closeLoginModal())
@@ -92,7 +124,16 @@ export default function LoginModal() {
               userId: user.uid,
               email: user.email
             })
-          } 
+          }
+          
+          // Dispatch sign in action with user data
+          dispatch(signInUser({
+            name: user.displayName || user.email?.split('@')[0] || 'User',
+            username: user.displayName || user.email?.split('@')[0] || 'User',
+            email: user.email || '',
+            uid: user.uid,
+            isSubscribed: true
+          }))
         }
         setErrorMsg('')
         setEmail('')

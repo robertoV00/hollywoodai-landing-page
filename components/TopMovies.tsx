@@ -5,6 +5,9 @@ import BlazeSlider from 'blaze-slider'
 import 'blaze-slider/dist/blaze.css'
 import Image from 'next/image'
 import { ClockIcon, StarIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 interface Movie {
   id: string
@@ -12,11 +15,15 @@ interface Movie {
   director: string
   imageLink: string
   rating: string
+  subscriptionRequired: boolean
 }
 
 export default function TopMovies() {
   const [movies, setMovies] = useState<Movie[]>([])
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
+  const user = useSelector((state: RootState) => state.user)
+  const isSubscribed = user?.isSubscribed || false
 
   const sliderRef = useRef<HTMLDivElement | null>(null)
   const sliderInstance = useRef<any>(null)
@@ -72,8 +79,14 @@ export default function TopMovies() {
             <div className='blaze-track flex gap-4'>
 
               {movies.map((movie) => (
-                <div key={movie.id} className='flex-shrink-0 w-[160px]'>
-                  <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden'>
+                <div key={movie.id} className='flex-shrink-0 w-[160px] relative' onClick={() => router.push(`/summary/${movie.id}`)}>
+                  {/* Premium pill */}
+                  {!isSubscribed && movie.subscriptionRequired && (
+                    <div className='absolute -top-0 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
+                      Premium
+                    </div>
+                  )}
+                  <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden top-3'>
                     <Image
                       src={movie.imageLink}
                       alt={movie.title}

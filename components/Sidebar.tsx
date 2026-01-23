@@ -3,6 +3,7 @@ import { ArrowTrendingUpIcon, BookmarkIcon, HomeIcon, MagnifyingGlassIcon, Quest
 import { Cog6ToothIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
 import React from 'react'
+import LogoutButton from './LogoutButton'
 
 export default function Sidebar() {
   return (
@@ -29,7 +30,7 @@ export default function Sidebar() {
                 <ul className='cursor-pointer'>
                     <SidebarLink Icon={QuestionMarkCircleIcon} text="Help & Support" href="/help"/>
                     <SidebarLink Icon={Cog6ToothIcon} text="Settings" href="/settings"/>
-                    <SidebarLink Icon={UserCircleIcon} text="Log out" href="/logout"/>
+                    <LogoutButton text="Log out" />
                 </ul>
             </div>
         </nav>
