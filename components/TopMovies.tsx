@@ -4,6 +4,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import BlazeSlider from 'blaze-slider'
 import 'blaze-slider/dist/blaze.css'
 import Image from 'next/image'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { ClockIcon, StarIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
@@ -66,7 +68,24 @@ export default function TopMovies() {
     }
   }, [movies])
 
-  if (loading) return <div className="p-8">Loading...</div>
+  if (loading) {
+    return (
+      <div className="p-8">
+        <h1 className='font-bold text-[26px] mb-2'>Top Movies</h1>
+        <h4 className='text-gray-500 mb-6'>Enjoy our highest rated films.</h4>
+        <div className='flex gap-4 overflow-x-auto pb-4'>
+          {Array.from({ length: 7 }).map((_, index) => (
+            <div key={index} className='flex-shrink-0 w-[160px]'>
+              <Skeleton height={250} className='rounded-lg mb-4' />
+              <Skeleton width='100%' height={20} className='mb-2' />
+              <Skeleton width='80%' height={14} className='mb-2' />
+              <Skeleton width='60%' height={16} />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="p-8">
@@ -86,7 +105,7 @@ export default function TopMovies() {
                       Premium
                     </div>
                   )}
-                  <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden top-3'>
+                  <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden top-3 mb-5'>
                     <Image
                       src={movie.imageLink}
                       alt={movie.title}

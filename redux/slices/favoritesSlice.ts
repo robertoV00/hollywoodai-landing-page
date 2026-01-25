@@ -45,10 +45,13 @@ const favoritesSlice = createSlice({
       if (typeof window !== 'undefined') {
         localStorage.setItem('favorites', JSON.stringify(state.movies))
       }
+    },
+    restoreFavorites: (state, action: PayloadAction<Movie[]>) => {
+      state.movies = action.payload
     }
   }
 })
 
-export const { addFavorite, removeFavorite, setFavorites } = favoritesSlice.actions
+export const { addFavorite, removeFavorite, setFavorites, restoreFavorites } = favoritesSlice.actions
 
 export default favoritesSlice.reducer

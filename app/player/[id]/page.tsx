@@ -9,6 +9,9 @@ import { TrackInfo } from '@/components/TrackInfo'
 import { Controls } from '@/components/Controls'
 import { ProgressBar } from '@/components/ProgressBar'
 import { VolumeControls } from '@/components/VolumeControls'
+import LoginModal from '@/components/modals/LoginModal'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export default function PlayerPage({ params }: { params: { id: string } }) {
   const movieId = params.id
@@ -36,7 +39,31 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
   }, [movieId])
 
   if (loading) {
-    return <div className="p-8 text-white">Loading...</div>
+    return (
+      <AudioPlayerProvider initialTracks={[]}>
+        <div className='flex h-screen bg-white'>
+          <Sidebar />
+          
+          <div className='flex-1 flex flex-col'>
+            <div className='flex-1 overflow-y-auto p-8 flex justify-center'>
+              <div className='max-w-7xl w-full'>
+                <Skeleton height={40} width='60%' className='mb-4' />
+                <Skeleton height={20} width='40%' className='mb-8' />
+                <div className='space-y-4'>
+                  <Skeleton height={20} count={3} />
+                  <Skeleton height={20} width='80%' />
+                </div>
+              </div>
+            </div>
+            <div className='bg-gray-800 border-t border-gray-700 p-2'>
+              <div className='max-w-6xl mx-auto'>
+                <Skeleton height={80} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </AudioPlayerProvider>
+    )
   }
 
   if (!movie) {
@@ -45,6 +72,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
 
   return (
     <AudioPlayerProvider initialTracks={tracks}>
+      <LoginModal />
       <div className='flex h-screen bg-white'>
         <Sidebar />
         

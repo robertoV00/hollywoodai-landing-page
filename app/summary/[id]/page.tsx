@@ -1,6 +1,7 @@
 'use client'
 
 import Sidebar from '@/components/Sidebar'
+import LoginModal from '@/components/modals/LoginModal'
 import { ClockIcon, StarIcon } from '@heroicons/react/24/outline'
 import { BoltIcon, BookmarkIcon, CalendarDateRangeIcon, MagnifyingGlassIcon, MicrophoneIcon } from '@heroicons/react/24/solid'
 import React, { useEffect, useState } from 'react'
@@ -12,6 +13,10 @@ import { openLoginModal } from '@/redux/slices/modalSlice'
 import { addFavorite, removeFavorite } from '@/redux/slices/favoritesSlice'
 import { auth } from '@/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
+import SearchBox from '@/components/SearchBox'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 
 export default function Page({ params }: { params: { id: string } }) {
     const movieId = params.id
@@ -53,7 +58,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
     const handleSummarizeClick = () => {
       // Not logged in - show login modal
-      if (!isLoggedIn) {
+      if (!user?.uid) {
         dispatch(openLoginModal())
         return
       }
@@ -70,13 +75,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }
 
     const handleFavoriteClick = () => {
-      // Not logged in - show login modal
-      if (!isLoggedIn) {
-        dispatch(openLoginModal())
-        return
-      }
-
-      // Logged in - toggle favorite
+      // Toggle favorite without requiring login
       setIsFavorited(!isFavorited)
       
       if (!isFavorited) {
@@ -89,50 +88,83 @@ export default function Page({ params }: { params: { id: string } }) {
     }
 
     if (loading) {
-      return <div className="p-8">Loading...</div>
+        return (
+            <>
+                <div className='flex'>
+                    <Sidebar />
+                    <div className='w-full'>
+                        <SearchBox />
+                        <div className='p-14 pl-48 pr-48 flex gap-8'>
+                            <div className='flex-1'>
+                                <div className='border-b-2 pb-4'>
+                                    <Skeleton height={40} width='40%' className='mb-4' />
+                                    <Skeleton height={20} width='20%' className='mb-4'/>
+                                    <Skeleton height={20} width='25%' className=''/>
+                                </div>
+                                <div className='flex gap-5 mb-8 border-b-2 flex-col pt-8 pb-8'>
+                                      <Skeleton height={20} width='10%' />
+                                      <Skeleton height={20} width='10%' />
+                                </div>
+                                <div className='flex gap-5 mb-8 flex-col pt-2 pb-8'>
+                                    <Skeleton height={50} width='40%' className='mt-4' />
+                                    <Skeleton height={35} width='20%' className='' />
+                                    <Skeleton height={30} width='15%' className='mt-2' />
+                                    <div>
+                                      <Skeleton height={20} className='mt-0' />
+                                      <Skeleton height={20} className='mt-0' />
+                                      <Skeleton height={20} className='mt-0' />
+                                      <Skeleton height={20} className='mt-0' />
+                                      <Skeleton height={20} className='mt-0' />
+                                    </div>
+                                  
+                                </div>
+                            </div>
+                            <div className='w-[250px] flex-shrink-0'>
+                                <Skeleton height={350} width='100%' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        )
     }
 
-    if (!movie) {
-        return <div className="p-8">Movie not found</div>
-    }
-  
     return (
     <>
+        {/* <LoginModal className=""/> */}
         <div className='flex'>
             <Sidebar />
             <div className='w-full'>
-                <div className='relative w-[400px] p-8 pl-0 left-40'>
-                                <input placeholder='Search for movies...' 
-                                className='bg-gray-200 w-full h-[40px] border-none outline-none rounded-full p-5 pl-12 text-sm' 
-                                type="text" 
-                                />
-                              <MagnifyingGlassIcon height={20} className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600'/>
-                </div>
-
-                <div className='p-14 pl-40 pr-40 flex gap-8'>
+                <SearchBox />
+                <div className='p-14 pl-48 pr-48 flex gap-8'>
                     <div className='flex-1'>
                         <div className='border-b-2'>
                             <h1 className='text-4xl font-bold mb-2'>{movie.title}</h1>
                             <p className='text-gray-500 mb-6'>{movie.director}</p>
                         </div>
 
-                        <div className='flex gap-5 mb-8 border-b-2 flex-col pt-8 pb-8'>
-                            <div className='flex items-center gap-2'>
-                                <StarIcon className='h-5 w-5'/>
-                                <span className='text-sm'>{movie.rating} / 10</span>
-                                <ClockIcon className='h-5 w-5'/>
-                                <span className='text-sm'>10:00</span>
-                            </div>
-                            
-                            <div className='flex items-center gap-2'>
-                                <MicrophoneIcon className='h-5 w-5'/>
-                                <span className='text-sm'>{movie.type}</span>
-                                <CalendarDateRangeIcon className='h-5 w-5'/>
-                                <span className='text-sm'>{movie.releaseYear}</span>
-                            </div>
+                          <div className='flex gap-5 mb-8 border-b-2 flex-col pt-8 pb-8'>
+                              <div className='icons-left-side flex items-center gap-2'>
+                                  <StarIcon className='h-5 w-5'/>
+                                  <span className='text-sm'>{movie.rating} / 10</span>
+                                  <div className="clock-icon-box-position flex relative left-20 gap-2">
+                                    <ClockIcon className='h-5 w-5'/>
+                                    <span className='text-sm'>10:00</span>
+                                  </div>
+                              </div>
+                              
+                              <div className='icons-right-side flex items-center gap-2'>
+                                  <MicrophoneIcon className='h-5 w-5'/>
+                                  <span className='text-sm'>{movie.type}</span>
+                                  <div className="calendar-icon-box-position flex gap-2 relative left-12">
+                                    <CalendarDateRangeIcon className='h-5 w-5'/>
+                                    <span className='text-sm'>{movie.releaseYear}</span>
+                                  </div>
+                              </div>
+
                         </div>
 
-                        <div className='flex gap-4 mb-8 flex-col'>
+                        <div className='summary-container flex gap-4 mb-8 flex-col'>
                             <button 
                               onClick={handleSummarizeClick}
                               className='bg-purple-700 text-white px-8 py-2 rounded-md font-semibold flex items-center gap-2 justify-center h-[50px] w-[300px] hover:bg-purple-800'>

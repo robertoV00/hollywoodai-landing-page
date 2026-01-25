@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { Provider, useDispatch } from 'react-redux'
 import { store } from './store'
 import { restoreUser } from './slices/userSlice'
+import { restoreFavorites } from './slices/favoritesSlice'
 
 
 interface StoreProviderProps {
@@ -22,6 +23,17 @@ function StoreInitializer({ children }: StoreProviderProps) {
         dispatch(restoreUser(user))
       } catch (error) {
         console.error('Error restoring user:', error)
+      }
+    }
+
+    // Restore favorites from localStorage on app load
+    const savedFavorites = localStorage.getItem('favorites')
+    if (savedFavorites) {
+      try {
+        const favorites = JSON.parse(savedFavorites)
+        dispatch(restoreFavorites(favorites))
+      } catch (error) {
+        console.error('Error restoring favorites:', error)
       }
     }
   }, [dispatch])

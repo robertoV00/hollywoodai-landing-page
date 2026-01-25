@@ -1,10 +1,11 @@
 'use client'
 
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
-import { AppDispatch } from '@/redux/store'
+import { AppDispatch, RootState } from '@/redux/store'
 import { signOutUser } from '@/redux/slices/userSlice'
+import { openLoginModal } from '@/redux/slices/modalSlice'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/firebase'
 
@@ -14,25 +15,35 @@ interface LogoutButtonProps {
 
 export default function LogoutButton({ text }: LogoutButtonProps) {
   const dispatch: AppDispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.user)
+  const isLoggedIn = !!user?.uid
 
-  const handleLogout = async () => {
-    try {
-      // Sign out from Firebase
-      await signOut(auth)
-      
-      // Dispatch sign out action to clear Redux state
-      dispatch(signOutUser())
-    } catch (error) {
-      console.error('Error logging out:', error)
+  const handleClick = async () => {
+    if (isLoggedIn) {
+      // User is logged in - log them out
+      try {
+        // Sign out from Firebase
+        await signOut(auth)
+        
+        // Dispatch sign out action to clear Redux state
+        dispatch(signOutUser())
+      } catch (error) {
+        console.error('Error logging out:', error)
+      }
+    } else {
+      // User is logged out - open login modal
+      dispatch(openLoginModal())
     }
   }
 
+  const buttonText = isLoggedIn ? 'Log Out' : 'Log In'
+
   return (
-    <button onClick={handleLogout} className="w-full text-left">
+    <button onClick={handleClick} className="w-full text-left">
       <li className='flex items-center space-x-3 p-2.5'>
         <UserCircleIcon className='h-[20px]' />
         <span className='text-[14px] text-nowrap'>
-          {text}
+          {buttonText}
         </span>
       </li>
     </button>

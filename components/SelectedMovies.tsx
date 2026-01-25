@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import BlazeSlider from 'blaze-slider'
 import 'blaze-slider/dist/blaze.css'
 import Image from 'next/image'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { ClockIcon, StarIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
@@ -80,7 +82,22 @@ export default function SelectedMovies() {
   }, [movies, slidesToShow])
 
   if (loading) {
-    return <div className="p-8">Loading...</div>
+    return (
+      <div className="p-8">
+        <h1 className='font-bold text-[26px] mb-2'>Selected just for you</h1>
+        <h4 className='text-gray-500 mb-6'>We think you'll like these.</h4>
+        <div className='flex gap-4 overflow-x-auto pb-4'>
+          {Array.from({ length: slidesToShow }).map((_, index) => (
+            <div key={index} className='flex-shrink-0 w-[160px]'>
+              <Skeleton height={250} className='rounded-lg mb-4' />
+              <Skeleton width='100%' height={20} className='mb-2' />
+              <Skeleton width='80%' height={14} className='mb-2' />
+              <Skeleton width='60%' height={16} />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -91,8 +108,8 @@ export default function SelectedMovies() {
 
         <div className='blaze-slider'>
           <div className='blaze-container w-full'>
-            <div className='blaze-track-container h-[350px] relative top-4'>
-              <div className='blaze-track relative flex gap-4 h-[450px]'>
+            <div className='blaze-track-container h-[380px] relative top-4'>
+              <div className='blaze-track relative flex gap-4 h-[450px] '>
                 {movies.map((movie) => (
                   
                   <div key={movie.id} className='flex-shrink-0 w-[160px] h-[250px] relative' onClick={() => router.push(`/summary/${movie.id}`)}>
@@ -104,7 +121,7 @@ export default function SelectedMovies() {
                           </div>
                         )}
 
-                        <div className='relative w-full h-full group cursor-pointer rounded-lg overflow-hidden top-3'>
+                        <div className='relative w-full h-full group cursor-pointer rounded-lg overflow-hidden top-3 mb-3'>
 
                         <Image
                             src={movie.imageLink}
@@ -115,7 +132,7 @@ export default function SelectedMovies() {
                         
                         {/* Hover overlay */}
                         <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100'>
-                            <h3 className='text-white text-sm font-bold mb-1 line-clamp-2'>{movie.title}</h3>
+                            <h3 className='text-white font-bold mb-1 line-clamp-2'>{movie.title}</h3>
                             <p className='text-gray-300 text-xs mb-2'>{movie.director}</p>
                             <div className='flex items-center gap-1'>
                             <span className='text-yellow-400'>⭐</span>
@@ -126,8 +143,8 @@ export default function SelectedMovies() {
 
 
                         </div>
-                        <div className='relative inset-0 bg-black bg-opacity-0 transition-all duration-300 flex flex-col justify-end p-3'>
-                            <h3 className='text-black text-sm text-[17px] font-bold mb-1 line-clamp-2'>{movie.title}</h3>
+                        <div className='relative inset-0 bg-black bg-opacity-0 transition-all duration-300 flex flex-col justify-end p-3 pl-0'>
+                            <h3 className='text-black text-lg text-[17px] font-bold mb-1 line-clamp-2'>{movie.title}</h3>
                             <p className='text-gray-500 text-xs mb-2'>{movie.director}</p>
                             <div className='flex items-center gap-1'>
                             <span className='text-gray-500'>

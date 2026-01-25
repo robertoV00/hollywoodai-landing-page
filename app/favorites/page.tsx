@@ -10,6 +10,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState, AppDispatch } from '@/redux/store'
 import { setFavorites } from '@/redux/slices/favoritesSlice'
 import Sidebar from '@/components/Sidebar'
+import SearchBox from '@/components/SearchBox'
+import LoginModal from '@/components/modals/LoginModal'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 
 interface Movie {
   id: string
@@ -99,20 +104,39 @@ export default function Favorites() {
 
   return (
     <>
+      <LoginModal />
       <div className='flex'>
         <Sidebar />
         <div className='w-full page-container'>
+        <SearchBox />
           <div className='p-20 pl-40 pr-40 entire-container'>
             <h1 className='font-bold text-[26px] mb-2'>Saved Movies</h1>
-            <h3 className='text-gray-400 mb-6 border-gray-200 border-b-2 pb-6 text-[20px] '>{movies.length} {movies.length === 1 ? 'Movie' : 'Movies'}</h3>
+            
+            {loading ? (
+              <>
+                <h3 className='text-gray-400 mb-6 border-gray-200 border-b-2 pb-6 text-[20px]'><Skeleton width={200} /></h3>
+                <div className='flex gap-4 overflow-x-auto pb-4'>
+                  {Array.from({ length: slidesToShow }).map((_, index) => (
+                    <div key={index} className='flex-shrink-0 w-[160px]'>
+                      <Skeleton height={260} className='rounded-lg mb-4' />
+                      <Skeleton width='100%' height={20} className='mb-2' />
+                      <Skeleton width='80%' height={14} className='mb-2' />
+                      <Skeleton width='60%' height={16} />
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className='text-gray-400 mb-6 border-gray-200 border-b-2 pb-6 text-[20px] '>{movies.length} {movies.length === 1 ? 'Movie' : 'Movies'}</h3>
 
-            <div className="slider-row">
-              <div className='blaze-slider w-full'>
-                <div className='blaze-container w-full'>
-                  <div className='blaze-track-container h-[360px] relative top-4'>
-                    <div className='blaze-track relative h-[470px]' style={{ width: `${movies.length * 160 + (movies.length - 1) * 16}px` }}>
-                      {/* dynamic width sizing ^ */}
-                      {movies.map((movie) => (
+                <div className="slider-row">
+                  <div className='blaze-slider w-full'>
+                    <div className='blaze-container w-full'>
+                      <div className='blaze-track-container h-[360px] relative top-4'>
+                        <div className='blaze-track relative h-[470px]' style={{ width: `${movies.length * 160 + (movies.length - 1) * 16}px` }}>
+                          {/* dynamic width sizing ^ */}
+                          {movies.map((movie) => (
                         
                         <div key={movie.id} className='movie-box flex-shrink-0 w-[160px] h-[260px] relative top-4' onClick={() => router.push(`/summary/${movie.id}`)}>
 
@@ -168,6 +192,8 @@ export default function Favorites() {
                 </div>
               </div>
             </div>
+              </>
+            )}
           </div>
         </div>
       </div>
