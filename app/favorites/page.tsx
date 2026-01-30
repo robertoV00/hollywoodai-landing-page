@@ -104,7 +104,7 @@ export default function Favorites() {
 
   return (
     <>
-      <LoginModal />
+      {/* <LoginModal /> */}
       <div className='flex'>
         <Sidebar />
         <div className='w-full page-container'>

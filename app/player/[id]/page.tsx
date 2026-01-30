@@ -4,6 +4,7 @@ import { fetchTracks } from '@/data/tracks';
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Sidebar from '@/components/Sidebar'
+import SearchBox from '@/components/SearchBox'
 import { AudioPlayerProvider } from '../../context/audio-player-context'
 import { TrackInfo } from '@/components/TrackInfo'
 import { Controls } from '@/components/Controls'
@@ -63,6 +64,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
         <Sidebar />
         
         <div className='flex-1 flex flex-col'>
+          <SearchBox />
           {/* Main content area */}
           <div className='flex-1 overflow-y-auto p-8 flex justify-center'>
             <div className='max-w-7xl'>

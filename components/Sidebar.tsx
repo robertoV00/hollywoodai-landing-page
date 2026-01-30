@@ -22,13 +22,13 @@ export default function Sidebar() {
                 <ul className='cursor-pointer'>
                     <SidebarLink Icon={Squares2X2Icon} text="Dashboard" href="/dashboard"/>
                     <SidebarLink Icon={BookmarkIcon} text="Favorites" href="/favorites"/>
-                    <SidebarLink Icon={MagnifyingGlassIcon} text="Search" href="/search" />
-                    <SidebarLink Icon={ArrowTrendingUpIcon} text="Trending" href="/trending"/>
+                    <SidebarLink Icon={MagnifyingGlassIcon} text="Search" href="" disabled/>
+                    <SidebarLink Icon={ArrowTrendingUpIcon} text="Trending" href="" disabled/>
                 </ul>
 
                 <div className='p-3 mt-8 text-[12px]'>EXTRAS</div>
                 <ul className='cursor-pointer'>
-                    <SidebarLink Icon={QuestionMarkCircleIcon} text="Help & Support" href="/help"/>
+                    <SidebarLink Icon={QuestionMarkCircleIcon} text="Help & Support" href="" disabled/>
                     <SidebarLink Icon={Cog6ToothIcon} text="Settings" href="/settings"/>
                     <LogoutButton text="Log out" />
                 </ul>
@@ -45,9 +45,21 @@ interface SidebarLinkProps {
     title?: string;
     titleId?: string;
 } & React.RefAttributes<SVGSVGElement>>;
+    disabled?: boolean;
 }
 
-function SidebarLink({text, Icon, href}: SidebarLinkProps) {
+function SidebarLink({text, Icon, href, disabled = false}: SidebarLinkProps) {
+    if (disabled) {
+        return (
+            <li className='flex items-center  space-x-3 p-2.5 rounded-lg transition-colors cursor-not-allowed'>
+                <Icon className='h-[20px]'/>
+                <span className='text-[14px] text-nowrap '>
+                    {text}
+                </span>
+            </li>
+        )
+    }
+    
     return (
         <Link href={href}>
             <li className='flex items-center space-x-3 p-2.5 rounded-lg transition-colors hover:bg-purple-100 hover:text-purple-800'>

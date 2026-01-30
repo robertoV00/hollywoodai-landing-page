@@ -14,14 +14,17 @@ import Image from 'next/image'
 import { UserIcon } from '@heroicons/react/24/solid'
 import {GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { useRouter } from 'next/navigation'
 import LoginModal from './LoginModal'
 import ForgotPasswordModal from './ForgotPasswordModal'
 
 export default function SignUpModal() {
+    const router = useRouter()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errorMsg, setErrorMsg] = useState('') // <-- new
     const isOpen = useSelector((state: RootState) => state.modals.signUpmodalOpen)
+    const user = useSelector((state: RootState) => state.user)
 
     //to use the reducers created in the modalSlice file, we need to use the dispatch hook
     const dispatch: AppDispatch = useDispatch()
@@ -89,8 +92,9 @@ export default function SignUpModal() {
 
     async function handleGoogleSignUp() {
       try{
-        await signInWithPopup(auth, provider)
-        const user = auth.currentUser
+        const result = await signInWithPopup(auth, provider)
+        const user = result.user
+        
         if(user) {
           const userDocRef = doc(db, 'users', user.uid)
           const userDocSnapshot = await getDoc(userDocRef)
@@ -100,12 +104,29 @@ export default function SignUpModal() {
               userId: user.uid,
               email: user.email
             })
-          } 
+          }
+          
+          // Dispatch sign in action with user data
+          dispatch(signInUser({
+            name: user.displayName || user.email?.split('@')[0] || 'User',
+            username: user.displayName || user.email?.split('@')[0] || 'User',
+            email: user.email || '',
+            uid: user.uid,
+            isSubscribed: true
+          }))
         }
-      } catch {
-        console.error("Google sign-up error")
+      } catch (err: any) {
+        console.error('Google sign-up error:', err)
       }
     }
+
+    // Close modal and navigate when user is authenticated
+    useEffect(() => {
+      if (user?.uid && isOpen) {
+        dispatch(closeSignUpModal())
+        router.push('/dashboard')
+      }
+    }, [user?.uid, isOpen, dispatch, router])
 
 
     // clear error and inputs whenever modal closes/opens
@@ -130,7 +151,7 @@ export default function SignUpModal() {
       onClose={() => dispatch(closeSignUpModal())}
       className='flex items-center justify-center'
       >
-        <div className='w-full h-full sm:w-[400px] sm:h-fit bg-white
+        <div className='w-full h-full sm:w-[500px] sm:h-[750px] bg-white
         sm: rounded-xl font-inter relative'>
 
             {/* error bar */}
@@ -144,14 +165,14 @@ export default function SignUpModal() {
             onClick={() => dispatch(closeSignUpModal())}
             className='w-7 h-7 text-gray-500 hover:text-gray-900 
             absolute top-5 right-5 cursor-pointer'/>
-            <div className='pt-20 pb-20 px-4 sm:px-10'>
+            <div className='pt-20 pb-20 px-4 sm:px-10 '>
               <h1 className='text-3xl font-bold mb-10 flex justify-center'>Sign Up</h1>
 
-              <div className='w-full space-y-5 mb-3 text-[15px] text-gray-600'>
+              <div className='w-full space-y-5 mb-3 text-[15px] text-gray-600 '>
                 <button className='border-[3px] border-gray-200 rounded-[10px] w-full flex p-2 transition duration-400 hover:-translate-y-0.5'
                 onClick={() => handleGoogleSignUp()}>
-                <Image className='h-5 solid pr-3 pl-2' src="/hollywood-ai/public/assets/google-logo.png" alt='google-logo'
-                width={38}
+                <Image className='h-4 solid pr-3 pl-2 top-1 relative' src="/assets/google-icon.png" alt='google-logo'
+                width={36}
                 height={20}
                 /> Login with Google
                 </button>
@@ -198,7 +219,7 @@ export default function SignUpModal() {
                   Forgot Password?
                 </span>
 
-                <button className='bg-blue-900 w-full h-[54px] rounded-[40px] text-white font-semibold' onClick={() => handleSignUp()}>
+                <button className='bg-purple-800 w-full h-[54px] rounded-[40px] text-white font-semibold' onClick={() => handleSignUp()}>
                   Sign Up
                 </button>
 

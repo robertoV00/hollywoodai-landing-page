@@ -4,6 +4,7 @@ import "./globals.css";
 import { Provider } from "react-redux";
 import StoreProvider from "@/redux/StoreProvider";
 import { AudioPlayerProvider } from "./context/audio-player-context";
+import LoginModal from "@/components/modals/LoginModal";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,7 +23,10 @@ export default function RootLayout({
     <StoreProvider>
       {/* <AudioPlayerProvider> */}
         <html lang="en">
-          <body className={inter.className}>{children}</body>
+          <body className={inter.className}>
+            {children}
+            <LoginModal />
+          </body>
         </html>
       {/* </AudioPlayerProvider> */}
     </StoreProvider>

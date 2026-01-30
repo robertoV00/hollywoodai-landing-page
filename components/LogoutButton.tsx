@@ -39,10 +39,10 @@ export default function LogoutButton({ text }: LogoutButtonProps) {
   const buttonText = isLoggedIn ? 'Log Out' : 'Log In'
 
   return (
-    <button onClick={handleClick} className="w-full text-left">
+    <button onClick={handleClick} className="w-full text-left ">
       <li className='flex items-center space-x-3 p-2.5'>
         <UserCircleIcon className='h-[20px]' />
-        <span className='text-[14px] text-nowrap'>
+        <span className='text-[14px] text-nowrap '>
           {buttonText}
         </span>
       </li>

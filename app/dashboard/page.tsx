@@ -9,11 +9,11 @@ import LoginModal from '@/components/modals/LoginModal'
 export default function page() {
   return (
     <>
-    <LoginModal />
-    <div className='flex mx-auto min-h-screen'>
-        <Sidebar />
-        <Dashboard />
-    </div>
+      {/* <LoginModal className=""/> */}
+      <div className='flex mx-auto min-h-screen'>
+          <Sidebar />
+          <Dashboard />
+      </div>
     </>
   )
 }

@@ -26,6 +26,7 @@ export default function LoginModal() {
     const [password, setPassword] = useState('')
     const [errorMsg, setErrorMsg] = useState('')
     const isOpen = useSelector((state: RootState) => state.modals.loginModalOpen)
+    const user = useSelector((state: RootState) => state.user)
 
     const dispatch: AppDispatch = useDispatch()
 
@@ -113,8 +114,9 @@ export default function LoginModal() {
 
     async function handleGoogleSignUp() {
       try{
-        await signInWithPopup(auth, provider)
-        const user = auth.currentUser
+        const result = await signInWithPopup(auth, provider)
+        const user = result.user
+        
         if(user) {
           const userDocRef = doc(db, 'users', user.uid)
           const userDocSnapshot = await getDoc(userDocRef)
@@ -134,13 +136,15 @@ export default function LoginModal() {
             uid: user.uid,
             isSubscribed: true
           }))
+
+          // Clear form
+          setErrorMsg('')
+          setEmail('')
+          setPassword('')
+          // The useEffect will handle closing the modal and navigating
         }
-        setErrorMsg('')
-        setEmail('')
-        setPassword('')
-        dispatch(closeLoginModal())
-        router.push('/dashboard')
       } catch (err: any) {
+        console.error('Google sign-up error:', err)
         const code = err?.code || 'auth/unknown'
         setErrorMsg(`Firebase: Error (${code})`)
       }
@@ -153,6 +157,14 @@ export default function LoginModal() {
         setPassword('')
       }
     }, [isOpen])
+
+    // Close modal and navigate when user is authenticated
+    useEffect(() => {
+      if (user?.uid && isOpen) {
+        dispatch(closeLoginModal())
+        router.push('/dashboard')
+      }
+    }, [user?.uid, isOpen, dispatch, router])
     
     useEffect(() => {
       if (errorMsg) return
@@ -171,7 +183,7 @@ export default function LoginModal() {
       onClose={() => dispatch(closeLoginModal())}
       className='flex items-center justify-center'
       >
-        <div className='w-full h-full sm:w-[400px] sm:h-fit bg-white
+        <div className='w-full h-full sm:w-[500px] sm:h-[750px] bg-white
         sm: rounded-xl font-inter relative'>
             {errorMsg && (
             <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-50 text-red-700 border border-red-200 px-4 py-2 rounded-md text-sm z-50">
@@ -189,7 +201,7 @@ export default function LoginModal() {
               <div className='w-full space-y-5 mb-3 text-[15px] text-gray-600'>
                 <button className='border-[3px] border-gray-200 rounded-[10px] w-full flex p-2 transition duration-400 hover:-translate-y-0.5'
                 onClick={() => handleGoogleSignUp()}>
-                <Image className='h-5 solid pr-3 pl-2' src="/hollywood-ai/public/assets/google-logo.png" alt='google-logo'
+                <Image className='h-4 solid pr-3 pl-2 top-1 relative' src="/assets/google-icon.png" alt='google-logo'
                 width={38}
                 height={20}
                 /> Login with Google
@@ -238,7 +250,7 @@ export default function LoginModal() {
                   Forgot Password?
                 </span>
 
-                <button className='bg-blue-900 w-full h-[54px] rounded-[40px] text-white font-bold' onClick={() => handleLogIn()}>
+                <button className='bg-purple-800 w-full h-[54px] rounded-[40px] text-white font-bold' onClick={() => handleLogIn()}>
                   Log In
                 </button>
 
