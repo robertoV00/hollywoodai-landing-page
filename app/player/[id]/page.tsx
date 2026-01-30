@@ -59,7 +59,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
 
   return (
     <AudioPlayerProvider initialTracks={tracks}>
-      <LoginModal />
+      {/* <LoginModal /> */}
       <div className='flex h-screen bg-white'>
         <Sidebar />
         

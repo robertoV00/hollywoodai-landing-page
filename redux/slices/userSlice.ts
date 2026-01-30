@@ -5,7 +5,8 @@ const initialState = {
     username: "",
     email: "",
     uid: "",
-    isSubscribed: false
+    isSubscribed: false,
+    subscriptionType: "basic" // "basic", "premium", "vip+"
 }
 
 const userSlice = createSlice({
@@ -18,6 +19,7 @@ const userSlice = createSlice({
         state.email = action.payload.email
         state.uid = action.payload.uid
         state.isSubscribed = action.payload.isSubscribed !== undefined ? action.payload.isSubscribed : true
+        state.subscriptionType = action.payload.subscriptionType || "basic"
         
         // Persist to localStorage
         if (typeof window !== 'undefined') {
@@ -30,6 +32,7 @@ const userSlice = createSlice({
         state.email = ""
         state.uid = ""
         state.isSubscribed = false
+        state.subscriptionType = "basic"
         
         // Clear from localStorage
         if (typeof window !== 'undefined') {
@@ -41,6 +44,7 @@ const userSlice = createSlice({
         state.username = action.payload.username
         state.email = action.payload.email
         state.uid = action.payload.uid
+        state.subscriptionType = action.payload.subscriptionType || "basic"
         state.isSubscribed = action.payload.isSubscribed
     }
   }
