@@ -1,12 +1,19 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import SearchBox from '@/components/SearchBox'
 import Link from 'next/link'
 
 export default function PlansPage() {
+  const router = useRouter()
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null)
+
+  const handleChoosePlan = (planName: string) => {
+    const planKey = planName.toLowerCase() === 'premium' ? 'premium' : 'vip'
+    router.push(`/stripe?plan=${planKey}`)
+  }
 
   const faqs = [
     {
@@ -147,6 +154,7 @@ export default function PlansPage() {
 
                 {/* CTA Button */}
                 <button
+                  onClick={() => handleChoosePlan(plan.name)}
                   disabled={plan.ctaDisabled}
                   className={`w-full py-3 rounded-lg font-semibold transition-colors ${
                     plan.ctaDisabled
