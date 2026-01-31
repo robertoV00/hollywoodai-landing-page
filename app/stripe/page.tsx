@@ -233,11 +233,9 @@ export default function CheckoutPage() {
 
   return (
     <div className='flex'>
-      <Sidebar />
       <div className='w-full'>
-        <SearchBox />
         <div className='min-h-screen bg-gradient-to-r from-teal-500 to-teal-600 p-8 flex items-center justify-center'>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full'>
+          <div className='mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full'>
             {/* Left Side - Plan Summary */}
             <div className='text-white'>
               <Link
