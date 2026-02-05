@@ -1,5 +1,8 @@
-import { auth, db } from "@/firebase.js";
+import { auth, db, app } from "@/firebase";
 import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import { getFunctions, httpsCallable } from "@firebase/functions";
+
+
 
 export const loadCheckout = async (priceId) => {
   const user = auth.currentUser;
@@ -44,3 +47,29 @@ export const loadCheckout = async (priceId) => {
     alert(error.message);
   }
 };
+
+
+export const loadPortal = async () => {
+    const user = auth.currentUser;
+  
+    if (!user) {
+      return;
+    }
+  
+    try {
+      const instance = getFunctions(app, "us-central1");
+      const functionRef = httpsCallable(
+        instance,
+        "ext-firestore-stripe-payments-createPortalLink"
+      );
+  
+      const { data } = await functionRef({
+        returnUrl: window.location.href,
+      });
+  
+      window.location.assign(data.url);
+    } catch (error) {
+      alert(error);
+    }
+  };
+  

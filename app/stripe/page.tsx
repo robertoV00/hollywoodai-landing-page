@@ -205,7 +205,7 @@ function CheckoutForm({ plan, planKey }: CheckoutFormProps) {
         disabled={!stripe || loading}
         className='w-full bg-teal-500 hover:bg-teal-600 disabled:bg-gray-400 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2'
       >
-        {loading ? 'Processing...' : 'Pay with Link'}
+        {loading ? 'Processing...' : 'Subscribe'}
       </button>
     </form>
   )
@@ -216,13 +216,26 @@ const plans: { [key: string]: PlanDetails } = {
     name: 'Hollywood AI - Premium',
     price: '$19.00',
     billing: 'Billed monthly',
-    features: ['Access 100+ Summaries', 'Higher Quality Audio', '2 Supported Devices'],
+    features: [
+      'Access 100+ Summaries',
+      'Higher Quality Audio',
+      '2 Supported Devices',
+      'License For Commercial Use',
+      'Premium Support'
+    ],
   },
   vip: {
     name: 'Hollywood AI - VIP+',
     price: '$190',
     billing: 'Billed yearly',
-    features: ['Access 100+ Summaries', 'Highest Quality Audio', '3 Supported Devices'],
+    features: [
+      'Access 100+ Summaries',
+      'Highest Quality Audio',
+      '3 Supported Devices',
+      'License For Commercial Use',
+      'Priority Support',
+      'Early Access to New Features'
+    ],
   },
 }
 
@@ -248,7 +261,7 @@ export default function CheckoutPage() {
                 Back
               </Link>
 
-              <h1 className='text-3xl font-bold mb-4'>Subscribe to {plan.name}</h1>
+              <h1 className='text-2xl font-bold mb-4'>Subscribe to {plan.name}</h1>
 
               <div className='bg-white/20 rounded-lg p-6 mb-6'>
                 <div className='flex justify-between items-start mb-4'>
@@ -256,7 +269,7 @@ export default function CheckoutPage() {
                     <h2 className='text-lg font-semibold'>{plan.name}</h2>
                     <p className='text-white/80 text-sm'>{plan.billing}</p>
                   </div>
-                  <span className='text-3xl font-bold'>{plan.price}</span>
+                  <span className='text-4xl font-bold'>{plan.price}</span>
                 </div>
 
                 <div className='border-t border-white/30 pt-4 flex justify-between items-center'>
@@ -269,9 +282,9 @@ export default function CheckoutPage() {
                   <span>{plan.price}</span>
                 </div>
 
-                <button className='text-white/80 hover:text-white text-sm mt-4'>
-                  Add promotion code
-                </button>
+                  <button className='text-white/80 hover:text-white text-sm mt-4'>
+                    Add promotion code
+                  </button>
               </div>
 
               <div className='space-y-2'>
@@ -296,6 +309,23 @@ export default function CheckoutPage() {
 
               <div className='text-xs text-gray-600 text-center mt-6'>
                 Your payment information is secure and encrypted.
+              </div>
+
+              <div className='text-xs text-gray-600 mt-8 pt-6 border-t border-gray-200 space-y-3 text-center'>
+                <p className='leading-relaxed'>
+                  Notwithstanding the logo displayed above, when paying with a co-branded eftpos debit card, your payment may be processed through either card network.
+                </p>
+                <p className='leading-relaxed'>
+                  By subscribing, you authorize ASAP Frontend to charge you according to the terms until you cancel.
+                </p>
+                <p className='leading-relaxed'>
+                  You also agree to the <a href='#' className='text-blue-600 hover:underline'>Terms of Service</a>, <a href='#' className='text-blue-600 hover:underline'>Privacy Policy</a>, and <a href='#' className='text-blue-600 hover:underline'>Link Terms and Privacy Policy</a>.
+                </p>
+                <div className='flex items-center justify-center gap-4 pt-2'>
+                  <span>Powered by <a href='#' className='text-blue-600 hover:underline font-semibold'>stripe</a></span>
+                  <span>|</span>
+                  <a href='#' className='text-blue-600 hover:underline'>Legal</a>
+                </div>
               </div>
             </div>
           </div>

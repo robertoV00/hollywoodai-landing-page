@@ -2,17 +2,41 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useDispatch, useSelector } from 'react-redux'
 import Sidebar from '@/components/Sidebar'
 import SearchBox from '@/components/SearchBox'
 import Link from 'next/link'
+import { loadCheckout } from '@/app/stripe/stripePayment'
+import { openLoginModal } from '@/redux/slices/modalSlice'
+import { RootState, AppDispatch } from '@/redux/store'
 
 export default function PlansPage() {
   const router = useRouter()
+  const dispatch: AppDispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.user)
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null)
 
-  const handleChoosePlan = (planName: string) => {
+  // Map plan names to Stripe price IDs
+  const priceIds: { [key: string]: string } = {
+    premium: 'price_1Svi6NKjhcxrXZvokEeFBQY8',
+    vip: 'price_1SxXsdKjhcxrXZvoaqKYSIt4',
+  }
+
+  const handleChoosePlan = async (planName: string) => {
+    // Check if user is logged in and not a guest
+    if (!user?.uid || user?.email === 'guest12345@gmail.com') {
+      dispatch(openLoginModal())
+      return
+    }
+
     const planKey = planName.toLowerCase() === 'premium' ? 'premium' : 'vip'
-    router.push(`/stripe?plan=${planKey}`)
+    const priceId = priceIds[planKey]
+    
+    if (priceId) {
+      await loadCheckout(priceId)
+    } else {
+      console.error('Invalid plan selected')
+    }
   }
 
   const faqs = [
@@ -53,7 +77,7 @@ export default function PlansPage() {
     },
     {
       name: 'Premium',
-      price: '$19',
+      price: '$15',
       priceSubtext: '/month',
       yearlyPrice: '$228/year',
       description: 'Best for regular viewers',
@@ -155,16 +179,16 @@ export default function PlansPage() {
                 {/* CTA Button */}
                 <button
                   onClick={() => handleChoosePlan(plan.name)}
-                  disabled={plan.ctaDisabled}
+                  disabled={plan.ctaDisabled || (!user?.uid || user?.email === 'guest12345@gmail.com') && plan.name !== 'Basic'}
                   className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-                    plan.ctaDisabled
+                    (plan.ctaDisabled || (!user?.uid || user?.email === 'guest12345@gmail.com') && plan.name !== 'Basic')
                       ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
                       : plan.highlighted
                       ? 'bg-purple-800 text-white hover:bg-purple-700'
                       : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                   }`}
                 >
-                  {plan.cta}
+                  {(!user?.uid || user?.email === 'guest12345@gmail.com') && plan.name !== 'Basic' ? 'Sign in to choose' : plan.cta}
                 </button>
               </div>
             ))}
