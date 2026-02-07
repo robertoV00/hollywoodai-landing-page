@@ -35,7 +35,7 @@ export default function Settings() {
   const subscriptionDisplay = getSubscriptionDisplay()
 
   return (
-    <div className='master-container p-8 pl-48 relative top-8'>
+    <div className='master-container lg:pl-48 pl-10 lg:pr-40 pr-10 p-8 relative top-8'>
       <h1 className='text-4xl font-bold mb-12 border-b pb-8'>Settings</h1>
 
       {isSignedIn ? (

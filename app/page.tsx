@@ -43,6 +43,9 @@ export default function Home() {
       {/* Hero */}
       <header>
         <div className="row header__row">
+          <div className="header__row__">
+
+          </div>
           <div className="header__widget">
             <span className="header__widget__title">Meet HollywoodAI</span>
             <span className="header__widget__emoji"> ⏺ </span>
@@ -56,9 +59,9 @@ export default function Home() {
             <Image 
               src="/assets/bolt.svg" 
               alt="Bolt icon" 
-              width={24} 
-              height={24} 
-              className="header__title__icon"
+              width={50} 
+              height={30} 
+              className="header__title__icon inline ml-6"
             />
           </h1>
           <p className="header__paragraph">
@@ -90,7 +93,7 @@ export default function Home() {
 
       {/* Features */}
       <section id="features">
-        <div className="container">
+        <div className="container m-auto">
           <div className="row features__row">
             <h1 className="features__title">
               The future of AI.
@@ -184,7 +187,7 @@ export default function Home() {
 
       {/* Summary */}
       <section id="summary">
-        <div className="container">
+        <div className="container m-auto">
           <div className="row summary__row">
             <div className="summary__text">
               <div className="summary__widget">
@@ -222,7 +225,7 @@ export default function Home() {
 
       {/* Steps */}
       <section id="steps">
-        <div className="container">
+        <div className="container m-auto">
           <div className="row steps__row">
             <h2 className="steps__title">
               So, how does it work?
@@ -260,7 +263,7 @@ export default function Home() {
 
       {/* Testimonials */}
       <section id="testimonials">
-        <div className="container">
+        <div className="container m-auto">
           <div className="row testimonials__row">
             <div className="testimonials__widget">
               <span className="testimonials__widget__title">Testimonials</span>
@@ -338,7 +341,7 @@ export default function Home() {
           <svg className="cta__svg" preserveAspectRatio="none" width="1440" height="86" viewBox="0 0 1440 86" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 85.662C240 29.1253 480 0.857 720 0.857C960 0.857 1200 29.1253 1440 85.662V0H0V85.662Z"></path>
           </svg>
-          <div className="container">
+          <div className="container m-auto">
             <div className="row cta__row">
               <p className="cta__widget">
                 <span className="cta__widget__logo">HollywoodAI</span>
@@ -366,7 +369,7 @@ export default function Home() {
           </div>
         </section>
         <section id="links">
-          <div className="links__container">
+          <div className="links__container m-auto">
             <Image
               src="/assets/logo-light.png"
               alt="HollywoodAI Logo"
@@ -403,7 +406,7 @@ export default function Home() {
           </div>
         </section>
         <section id="copyright">
-          <div className="copyright__container">
+          <div className="copyright__container m-auto">
             <form action="" className="copyright__form">
               <input
                 type="text"

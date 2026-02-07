@@ -54,16 +54,44 @@ export default function TopMovies() {
       sliderInstance.current.destroy()
     }
 
+    const getSlidesToShow = () => {
+      const width = window.innerWidth
+      if (width < 560) return 2
+      if (width < 764) return 2
+      if (width < 980) return 3
+      if (width < 1200) return 3
+      if (width < 1290) return 4
+      return 5
+    }
+
     sliderInstance.current = new BlazeSlider(sliderRef.current, {
       all: {
-        slidesToShow: 7,
+        slidesToShow: getSlidesToShow(),
         slideGap: '16px',
         transitionDuration: 500,
-        loop: false
+        loop: false,
+        enableMouseEvents: false,
       }
     })
 
+    const handleResize = () => {
+      if (sliderInstance.current) {
+        sliderInstance.current.destroy()
+        sliderInstance.current = new BlazeSlider(sliderRef.current!, {
+          all: {
+            slidesToShow: getSlidesToShow(),
+            slideGap: '16px',
+            transitionDuration: 500,
+            loop: false,
+            enableMouseEvents: false,
+          }
+        })
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
     return () => {
+      window.removeEventListener('resize', handleResize)
       sliderInstance.current?.destroy()
     }
   }, [movies])
@@ -92,55 +120,47 @@ export default function TopMovies() {
       <h1 className='font-bold text-[26px] mb-2'>Top Movies</h1>
       <h4 className='text-gray-500 mb-6'>Enjoy our highest rated films.</h4>
 
-      <div className='blaze-slider' ref={sliderRef}>
-        <div className='blaze-container w-full'>
-          <div className='blaze-track-container'>
-            <div className='blaze-track flex gap-4'>
+      <div className='flex flex-wrap gap-4 overflow-x-auto max-h-[320px]'>
+        {movies.map((movie) => (
+          <div key={movie.id} className='w-[160px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
+            {/* Premium pill */}
+            {!isSubscribed && movie.subscriptionRequired && (
+              <div className='absolute -top-0 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
+                Premium
+              </div>
+            )}
+            <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden'>
+              <Image
+                src={movie.imageLink}
+                alt={movie.title}
+                fill
+                className='object-cover'
+              />
 
-              {movies.map((movie) => (
-                <div key={movie.id} className='flex-shrink-0 w-[160px] relative' onClick={() => router.push(`/summary/${movie.id}`)}>
-                  {/* Premium pill */}
-                  {!isSubscribed && movie.subscriptionRequired && (
-                    <div className='absolute -top-0 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
-                      Premium
-                    </div>
-                  )}
-                  <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden top-3 mb-5'>
-                    <Image
-                      src={movie.imageLink}
-                      alt={movie.title}
-                      fill
-                      className='object-cover'
-                    />
-
-                    <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100'>
-                      <h3 className='text-white text-sm font-bold mb-1 line-clamp-2'>{movie.title}</h3>
-                      <p className='text-gray-300 text-xs mb-2'>{movie.director}</p>
-                      <div className='flex items-center gap-1'>
-                        <span className='text-yellow-400'>⭐</span>
-                        <span className='text-white text-sm font-semibold'>{movie.rating}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='mt-2'>
-                    <h3 className='text-black text-[17px] font-bold'>{movie.title}</h3>
-                    <p className='text-gray-500 text-xs mb-1'>{movie.director}</p>
-
-                    <div className='flex items-center gap-1'>
-                      <ClockIcon className='h-4 text-gray-500' />
-                      <StarIcon className='h-4 text-gray-500' />
-                      <span className='text-gray-500 text-sm font-semibold'>
-                        {movie.rating}
-                      </span>
-                    </div>
-                  </div>
+              <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100'>
+                <h3 className='text-white text-sm font-bold mb-1'>{movie.title}</h3>
+                <p className='text-gray-300 text-xs mb-2'>{movie.director}</p>
+                <div className='flex items-center gap-1'>
+                  <span className='text-yellow-400'>⭐</span>
+                  <span className='text-white text-sm font-semibold'>{movie.rating}</span>
                 </div>
-              ))}
+              </div>
+            </div>
 
+            <div className='mt-2'>
+              <h3 className='text-black text-sm font-bold break-words'>{movie.title}</h3>
+              <p className='text-gray-500 text-xs mb-1 break-words'>{movie.director}</p>
+
+              <div className='flex items-center gap-1'>
+                <ClockIcon className='h-4 text-gray-500' />
+                <StarIcon className='h-4 text-gray-500' />
+                <span className='text-gray-500 text-xs font-semibold'>
+                  {movie.rating}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
   )

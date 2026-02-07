@@ -48,16 +48,19 @@ export default function Favorites() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 640) {
+      const width = window.innerWidth
+      if (width < 560) {
         setSlidesToShow(2)
-      } else if (window.innerWidth < 768) {
+      } else if (width < 764) {
+        setSlidesToShow(2)
+      } else if (width < 980) {
         setSlidesToShow(3)
-      } else if (window.innerWidth < 1024) {
+      } else if (width < 1200) {
+        setSlidesToShow(3)
+      } else if (width < 1290) {
         setSlidesToShow(4)
-      } else if (window.innerWidth < 1280) {
-        setSlidesToShow(5)
       } else {
-        setSlidesToShow(7)
+        setSlidesToShow(5)
       }
     }
 
@@ -109,7 +112,7 @@ export default function Favorites() {
         <Sidebar />
         <div className='w-full page-container'>
         <SearchBox />
-          <div className='p-20 pl-40 pr-40 entire-container'>
+          <div className='p-20 lg:pl-40 lg:pr-40 pl-10 pr-10 md:pl-20 md:pr-20 entire-container'>
             <h1 className='font-bold text-[26px] mb-2'>Saved Movies</h1>
             
             {loading ? (
@@ -131,14 +134,10 @@ export default function Favorites() {
                 <h3 className='text-gray-400 mb-6 border-gray-200 border-b-2 pb-6 text-[20px] '>{movies.length} {movies.length === 1 ? 'Movie' : 'Movies'}</h3>
 
                 <div className="slider-row">
-                  <div className='blaze-slider w-full'>
-                    <div className='blaze-container w-full'>
-                      <div className='blaze-track-container h-[360px] relative top-4'>
-                        <div className='blaze-track relative h-[470px]' style={{ width: `${movies.length * 160 + (movies.length - 1) * 16}px` }}>
-                          {/* dynamic width sizing ^ */}
+                  <div className='flex flex-wrap gap-4 w-full'>
                           {movies.map((movie) => (
                         
-                        <div key={movie.id} className='movie-box flex-shrink-0 w-[160px] h-[260px] relative top-4' onClick={() => router.push(`/summary/${movie.id}`)}>
+                        <div key={movie.id} className='movie-box w-[160px] h-[260px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
 
 
                               <div className='premium-pill w-full h-full group cursor-pointer rounded-lg overflow-hidden'>
@@ -186,12 +185,9 @@ export default function Favorites() {
 
 
                       ))}
-                    </div>
                   </div>
                   
                 </div>
-              </div>
-            </div>
               </>
             )}
           </div>

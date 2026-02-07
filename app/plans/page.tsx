@@ -117,15 +117,15 @@ export default function PlansPage() {
       <Sidebar />
       <div className='w-full'>
         <SearchBox />
-          <div className='border-b-2 p-7 pl-36'>
+          <div className='border-b-2 p-7 2xl:pl-48 lg:pl-10'>
             <h1 className='text-4xl font-bold mb-2'>Plans</h1>
             <p className='text-gray-500 text-baseline'>Get unlimited access to our extensive library of movie summaries.</p>
           </div>
-        <div className='master-container p-8 pl-36 pr-36 relative'>
+        <div className='master-container p-8 2xl:pl-48 2xl:pr-40 lg:pl-10 lg:pr-10 sm:pr-[30px] relative'>
 
             <h2 className='text-[32px] font-bold mb-4'>Subscription Plans:</h2>
           {/* Pricing Cards */}
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8 mb-16'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 lg:w-[100%] md:w-[90%] sm:w-[90%] xs:w-[70%]'>
             {plans.map((plan, index) => (
               <div
                 key={index}
@@ -144,7 +144,7 @@ export default function PlansPage() {
                 )}
 
                 <h2 className='text-2xl font-bold mb-2'>{plan.name}</h2>
-                <p className='text-gray-600 text-sm mb-6'>{plan.description}</p>
+                <p className='text-gray-600 text-sm mb-6 md:text-[14px]'>{plan.description}</p>
 
                 <div className='mb-8'>
                   <span className='text-4xl font-bold'>{plan.price}</span>
