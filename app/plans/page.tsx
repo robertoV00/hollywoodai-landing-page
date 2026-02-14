@@ -188,7 +188,7 @@ export default function PlansPage() {
                       : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                   }`}
                 >
-                  {(!user?.uid || user?.email === 'guest12345@gmail.com') && plan.name !== 'Basic' ? 'Sign in to choose' : plan.cta}
+                  {(!user?.uid || user?.email === 'guest12345@gmail.com') && plan.name !== 'Basic' ? 'Account Required' : plan.cta}
                 </button>
               </div>
             ))}
