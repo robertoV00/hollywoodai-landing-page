@@ -6,9 +6,16 @@ import { Cog6ToothIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import LogoutButton from './LogoutButton'
+import LoginModal from './modals/LoginModal'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { openLoginModal } from '@/redux/slices/modalSlice'
 
 export default function Sidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.user)
+  const isLoggedIn = !!user?.uid
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen)
@@ -74,8 +81,14 @@ export default function Sidebar() {
                 <ul className='cursor-pointer'>
                     <SidebarLink Icon={QuestionMarkCircleIcon} text="Help & Support" href="" disabled/>
                     <SidebarLink Icon={Cog6ToothIcon} text="Settings" href="/settings"/>
-                    <LogoutButton text="Log out" />
+                    {isLoggedIn ? <LogoutButton text="Log out" /> : <button onClick={() => dispatch(openLoginModal())} className="w-full text-left flex items-center space-x-3 p-2.5 rounded-lg transition-colors hover:bg-purple-100 hover:text-purple-800">
+                            <UserCircleIcon className='h-[20px]' />
+                            <span className='text-[14px] text-nowrap '> Log In</span>
+                          </button>}
                 </ul>
+                <div className='opacity-0'>
+                    <LoginModal />
+                </div>
             </div>
         </nav>
 
