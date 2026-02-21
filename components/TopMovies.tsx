@@ -54,46 +54,29 @@ export default function TopMovies() {
       sliderInstance.current.destroy()
     }
 
-    const getSlidesToShow = () => {
-      const width = window.innerWidth
-      if (width < 560) return 2
-      if (width < 764) return 2
-      if (width < 980) return 3
-      if (width < 1200) return 3
-      if (width < 1290) return 4
-      return 5
-    }
-
     sliderInstance.current = new BlazeSlider(sliderRef.current, {
       all: {
-        slidesToShow: getSlidesToShow(),
+        slidesToShow: 7,
         slideGap: '16px',
         transitionDuration: 500,
         loop: false,
         enableMouseEvents: false,
+      },
+      '(max-width: 1300px)' : {
+        slidesToShow: 5
+      },
+      '(max-width: 1200px)' : {
+        slidesToShow: 4
+      },
+      '(max-width: 980px)' : {
+        slidesToShow: 3
+      },
+      '(max-width: 600px)' : {
+        slidesToShow: 2
       }
+
     })
 
-    const handleResize = () => {
-      if (sliderInstance.current) {
-        sliderInstance.current.destroy()
-        sliderInstance.current = new BlazeSlider(sliderRef.current!, {
-          all: {
-            slidesToShow: getSlidesToShow(),
-            slideGap: '16px',
-            transitionDuration: 500,
-            loop: false,
-            enableMouseEvents: false,
-          }
-        })
-      }
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      sliderInstance.current?.destroy()
-    }
   }, [movies])
 
   if (loading) {
@@ -116,52 +99,58 @@ export default function TopMovies() {
   }
 
   return (
-    <div className="p-8">
+    <div className="top-movies-master-container p-8 pt-5 w-[100%] 2xl:pl-48 2xl:pr-48 md:pl-10 md:pr-10">
       <h1 className='font-bold text-[26px] mb-2'>Top Movies</h1>
       <h4 className='text-gray-500 mb-6'>Enjoy our highest rated films.</h4>
 
-      <div className='flex flex-wrap gap-4 overflow-x-auto max-h-[320px]'>
-        {movies.map((movie) => (
-          <div key={movie.id} className='w-[160px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
-            {/* Premium pill */}
-            {!isSubscribed && movie.subscriptionRequired && (
-              <div className='absolute -top-0 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
-                Premium
-              </div>
-            )}
-            <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden'>
-              <Image
-                src={movie.imageLink}
-                alt={movie.title}
-                fill
-                className='object-cover'
-              />
+      <div className="blaze-slider" ref={sliderRef}>
+      <div className="blaze-container">
+        <div className="blaze-track-container">
+          <div className="blaze-track">
+          {movies.map((movie) => (
+            <div key={movie.id} className='w-[160px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
+              {/* Premium pill */}
+              {!isSubscribed && movie.subscriptionRequired && (
+                <div className='absolute -top-0 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
+                  Premium
+                </div>
+              )}
+              <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden'>
+                <Image
+                  src={movie.imageLink}
+                  alt={movie.title}
+                  fill
+                  className='object-cover'
+                />
 
-              <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100'>
-                <h3 className='text-white text-sm font-bold mb-1'>{movie.title}</h3>
-                <p className='text-gray-300 text-xs mb-2'>{movie.director}</p>
+                <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100'>
+                  <h3 className='text-white text-sm font-bold mb-1'>{movie.title}</h3>
+                  <p className='text-gray-300 text-xs mb-2'>{movie.director}</p>
+                  <div className='flex items-center gap-1'>
+                    <span className='text-yellow-400'>⭐</span>
+                    <span className='text-white text-sm font-semibold'>{movie.rating}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className='mt-2'>
+                <h3 className='text-black text-sm font-bold break-words'>{movie.title}</h3>
+                <p className='text-gray-500 text-xs mb-1 break-words'>{movie.director}</p>
+
                 <div className='flex items-center gap-1'>
-                  <span className='text-yellow-400'>⭐</span>
-                  <span className='text-white text-sm font-semibold'>{movie.rating}</span>
+                  <ClockIcon className='h-4 text-gray-500' />
+                  <StarIcon className='h-4 text-gray-500' />
+                  <span className='text-gray-500 text-xs font-semibold'>
+                    {movie.rating}
+                  </span>
                 </div>
               </div>
             </div>
-
-            <div className='mt-2'>
-              <h3 className='text-black text-sm font-bold break-words'>{movie.title}</h3>
-              <p className='text-gray-500 text-xs mb-1 break-words'>{movie.director}</p>
-
-              <div className='flex items-center gap-1'>
-                <ClockIcon className='h-4 text-gray-500' />
-                <StarIcon className='h-4 text-gray-500' />
-                <span className='text-gray-500 text-xs font-semibold'>
-                  {movie.rating}
-                </span>
-              </div>
-            </div>
+          ))}
           </div>
-        ))}
+        </div>
       </div>
+    </div>
     </div>
   )
 }

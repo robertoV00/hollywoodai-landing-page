@@ -12,11 +12,11 @@ export default function Dashboard() {
       <div className="">
         <SearchBox />
       </div>
-      <div className='summarizer-container border-b p-8 pt-5 w-full lg:pl-48 md:pl-20 sm:pl-10'>
+      <div className='summarizer-container border-b p-8 pt-5 w-[100%] 2xl:pl-48 2xl:pr-48 md:pl-10 md:pr-10 sm:pl-10'>
               <h1 className='text-[36px] font-bold'>AI Movie Summarizer</h1>
-              <p className='text-gray-600 text-[14px]'>Enjoy high-quality summaries of your favorite movies instantly without breaking a sweat.</p>
+              <p className='text-gray-600 text-[14px] flex wrap'>Enjoy high-quality summaries of your favorite movies instantly without breaking a sweat.</p>
       </div>
-      <div className='lg:pl-40 lg:pr-40 md:pl-10 md:pr-10'>
+      <div className=''>
           <SelectedMovies />
           <TopMovies />
       </div>

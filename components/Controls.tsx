@@ -4,38 +4,29 @@ import {
   BsFillPauseFill,
   BsFillPlayFill,
   BsFillRewindFill,
-  BsSkipEndFill,
-  BsSkipStartFill,
-  BsShuffle,
-  BsRepeat,
 } from 'react-icons/bs';
-//import { useAudioPlayerContext } from '../app/context/audio-player-context';
-import { tracks } from '@/data/tracks';
 import { useAudioPlayerContext } from '@/app/context/audio-player-context';
 
 export const Controls = () => {
-
   const { currentTrack, 
     audioRef, 
     setDuration, 
     duration, 
     setTimeProgress, 
     progressBarRef, 
-    setTrackIndex, 
-    setCurrentTrack, 
     isPlaying,
     setIsPlaying
    } = useAudioPlayerContext();
-  const [isShuffle, setIsShuffle] = useState<boolean>(false);
-  const [isRepeat, setIsRepeat] = useState<boolean>(false);
-  //const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
+  //Handles skipping forward by 15 seconds
   const skipForward = () => {
   if (audioRef.current) {
     audioRef.current.currentTime += 15;
     updateProgress();
   }
 };
+
+  //Handles skipping backwards by 15 seconds
   const skipBackward = () => {
     if (audioRef.current) {
       audioRef.current.currentTime -= 15;
@@ -43,48 +34,11 @@ export const Controls = () => {
     }
 };
 
-  const handlePrevious = useCallback(() => {
-    setTrackIndex((prev) => {
-      const newIndex = isShuffle
-        ? Math.floor(Math.random() * tracks.length)
-        : prev === 0
-        ? tracks.length - 1
-        : prev - 1;
-      setCurrentTrack(tracks[newIndex]);
-      return newIndex;
-    });
-  }, [isShuffle, setCurrentTrack, setTrackIndex]);
-
-  const handleNext = useCallback(() => {
-    setTrackIndex((prev) => {
-      const newIndex = isShuffle
-        ? Math.floor(Math.random() * tracks.length)
-        : prev >= tracks.length - 1
-        ? 0
-        : prev + 1;
-      setCurrentTrack(tracks[newIndex]);
-      return newIndex;
-    });
-  }, [isShuffle, setCurrentTrack, setTrackIndex]);
-
-useEffect(() => {
-    const currentAudioRef= audioRef.current;
-    if (currentAudioRef) {
-      currentAudioRef.onended = () => {
-        if (isRepeat) {
-          currentAudioRef.play();
-        } else {
-          handleNext();// This function should handle both shuffle and non-shuffle scenarios
-        }
-      };
-    }
-    return () =>{
-      if (currentAudioRef) {
-        currentAudioRef.onended = null;
-      }
-    };
-  }, [isRepeat, handleNext,audioRef]);
-
+  /* This function runs when the audio file is loaded
+  1. Gets the track duration by retrieving how long the audio track is from the audio element
+  2. Stores the duration using setDuration() so other components can use it
+  3. Sets the progress bar's max value by telling the progress bar that its maximum value equals the track's total duration
+  */
   const onLoadedMetadata = () =>{
     const seconds = audioRef.current?.duration;
     if (seconds !== undefined) {
@@ -96,6 +50,7 @@ useEffect(() => {
 
   };
 
+  //Updates the progress bar and time progress state as the audio plays
   const updateProgress = useCallback(() =>{
     if (audioRef.current && progressBarRef.current && duration) {
       const currentTime = audioRef.current.currentTime;
@@ -108,6 +63,7 @@ useEffect(() => {
     }
   }, [duration,setTimeProgress, audioRef, progressBarRef]);
 
+  //plays or pauses the audio based on the isPlaying state and starts or stops the animation accordingly
   const startAnimation = useCallback(() =>{
   if (audioRef.current && progressBarRef.current && duration) {
     const animate = () => {
@@ -123,6 +79,7 @@ useEffect(() => {
   useEffect(() => {
     if (isPlaying) {
         audioRef.current?.play();
+        console.log(audioRef.current)
         startAnimation();
     } else {
         audioRef.current?.pause();
@@ -139,22 +96,18 @@ useEffect(() => {
     };
     }, [isPlaying, startAnimation, updateProgress, audioRef]);
 
-    
-
   return (
 
     <div className="flex gap-4 items-center">
       <audio 
-      src={currentTrack.src} 
+      src={`https://advanced-internship-api-production.up.railway.app/${currentTrack.src}`} 
       ref={audioRef}
       onLoadedMetadata={onLoadedMetadata}
       />
       
-      {/* <button onClick={handlePrevious}>
-        <BsSkipStartFill size={20} />
-      </button> */}
       <button onClick={skipBackward} className='text-white'>
         <BsFillRewindFill size={20} className=''/>
+        <span>15</span>
       </button>
       <button onClick={() => setIsPlaying((prev) => !prev)} className='border-2 p-2 rounded-full border-white bg-white transition'>
         {isPlaying ? (
@@ -165,22 +118,8 @@ useEffect(() => {
       </button>
       <button onClick={skipForward} className='text-white'>
         <BsFillFastForwardFill size={20} />
+        <span>15</span>
       </button>
-      {/* <button onClick={handleNext}>
-        <BsSkipEndFill size={20} />
-      </button>
-      <button onClick={() => setIsShuffle((prev) => !prev)}>
-        <BsShuffle
-          size={20}
-          className={isShuffle ?'text-[#f50]' : ''}
-        />
-      </button>
-      <button onClick={() => setIsRepeat((prev) => !prev)}>
-        <BsRepeat
-          size={20}
-          className={isRepeat ? 'text-[#f50]' : ''}
-        />
-      </button> */}
     </div>
   );
 };

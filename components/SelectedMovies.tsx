@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import BlazeSlider from 'blaze-slider'
 import 'blaze-slider/dist/blaze.css'
 import Image from 'next/image'
@@ -24,10 +24,12 @@ interface Movie {
 export default function SelectedMovies() {
   const [movies, setMovies] = useState<Movie[]>([])
   const [loading, setLoading] = useState(true)
-  const [slidesToShow, setSlidesToShow] = useState(7)
   const router = useRouter()
   const user = useSelector((state: RootState) => state.user)
   const isSubscribed = user?.isSubscribed || false
+
+  const sliderRef = useRef<HTMLDivElement | null>(null)
+  const sliderInstance = useRef<any>(null)
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -46,43 +48,36 @@ export default function SelectedMovies() {
   }, [])
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 560) {
-        setSlidesToShow(2)
-      } else if (window.innerWidth < 764) {
-        setSlidesToShow(2)
-      } else if (window.innerWidth < 980) {
-        setSlidesToShow(3)
-      } else if (window.innerWidth < 1200) {
-        setSlidesToShow(3)
-      } else if (window.innerWidth < 1290) {
-        setSlidesToShow(4)
-      } else {
-        setSlidesToShow(5)
-      }
+    if (!sliderRef.current || movies.length === 0) return
+
+    // destroy previous instance
+    if (sliderInstance.current) {
+      sliderInstance.current.destroy()
     }
 
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  useEffect(() => {
-    if (movies.length > 0) {
-      const el = document.querySelector('.blaze-slider')
-      if (el) {
-        new BlazeSlider(el, {
-            all: {
-                slidesToShow: slidesToShow,
-                slideGap: "16px",
-                transitionDuration: 500,
-                loop: false,
-                enableMouseEvents: false,
-            }
-        })
+    sliderInstance.current = new BlazeSlider(sliderRef.current, {
+      all: {
+        slidesToShow: 7,
+        slideGap: '16px',
+        transitionDuration: 500,
+        loop: false,
+        enableMouseEvents: false,
+      },
+      '(max-width: 1300px)' : {
+        slidesToShow: 5
+      },
+      '(max-width: 1200px)' : {
+        slidesToShow: 4
+      },
+      '(max-width: 980px)' : {
+        slidesToShow: 3
+      },
+      '(max-width: 600px)' : {
+        slidesToShow: 2
       }
-    }
-  }, [movies, slidesToShow])
+
+    })
+  }, [movies])
 
   if (loading) {
     return (
@@ -90,7 +85,7 @@ export default function SelectedMovies() {
         <h1 className='font-bold text-[26px] mb-2'>Selected just for you</h1>
         <h4 className='text-gray-500 mb-6'>We think you'll like these.</h4>
         <div className='flex gap-4 overflow-x-auto pb-4'>
-          {Array.from({ length: slidesToShow }).map((_, index) => (
+          {Array.from({ length: 10 }).map((_, index) => (
             <div key={index} className='flex-shrink-0 w-[160px]'>
               <Skeleton height={250} className='rounded-lg mb-4' />
               <Skeleton width='100%' height={20} className='mb-2' />
@@ -105,11 +100,14 @@ export default function SelectedMovies() {
 
   return (
     <>
-      <div className="selected-for-you-container p-8">
+      <div className="selected-movies-master-container p-8 pt-5 w-[100%] 2xl:pl-48 2xl:pr-48 md:pl-10 md:pr-10 sm:pl-10 sm:pr-10">
         <h1 className='font-bold text-[26px] mb-2'>Selected just for you</h1>
         <h4 className='text-gray-500 mb-6'>We think you'll like these.</h4>
 
-        <div className='flex flex-wrap gap-4 overflow-x-auto max-h-[320px]'>
+        <div className="blaze-slider" ref={sliderRef}>
+        <div className="blaze-container">
+        <div className="blaze-track-container">
+          <div className="blaze-track">
           {movies.map((movie) => (
             <div key={movie.id} className='w-[160px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
               {/* Premium pill */}
@@ -153,7 +151,10 @@ export default function SelectedMovies() {
               </div>
             </div>
           ))}
+          </div>
         </div>
+      </div>
+    </div>
       </div>
     </>
   )

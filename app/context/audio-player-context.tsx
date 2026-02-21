@@ -11,8 +11,6 @@ import {
   RefObject,
   useEffect,
 } from 'react';
-import { tracks } from '../../data/tracks';
-
 
 export interface Track {
   title: string;
@@ -58,6 +56,7 @@ export const AudioPlayerProvider = ({
   const [currentTrack, setCurrentTrack] = useState<Track>(
     initialTracks.length > 0 ? initialTracks[0] : { title: '', src: '', author: '' }
   );
+
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressBarRef = useRef<HTMLInputElement>(null);
   
@@ -84,7 +83,7 @@ export const AudioPlayerProvider = ({
 
   return (
     <AudioPlayerContext.Provider value={contextValue}>
-      <audio ref={audioRef} />
+      <audio ref={audioRef} src={currentTrack.src}/>
       {children}
     </AudioPlayerContext.Provider>
   );

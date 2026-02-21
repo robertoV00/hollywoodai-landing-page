@@ -27,6 +27,7 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
         const data = await response.json()
         setMovie(data.data)
         const fetchedTracks = await fetchTracks(movieId)
+        console.log(fetchedTracks)
         setTracks(fetchedTracks)
       } catch (error) {
         console.error('Error fetching movie:', error)

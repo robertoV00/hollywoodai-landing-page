@@ -53,8 +53,11 @@ export default function Sidebar() {
         } lg:translate-x-0 lg:relative lg:w-[250px] lg:border-r lg:shadow-none pl-5 bg-white`}>
             {/* Close button for mobile */}
             <button
-              onClick={closeSidebar}
-              className='lg:hidden absolute top-4 right-4 p-1'
+              onClick={(e) => {
+                e.stopPropagation()
+                closeSidebar()
+              }}
+              className='lg:hidden absolute top-4 right-4 p-1 z-50 pointer-events-auto'
               aria-label='Close sidebar'
             >
               <XMarkIcon className='h-6 w-6' />
