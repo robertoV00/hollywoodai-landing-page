@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import "./styles.css"
 import BlazeSlider from 'blaze-slider'
 import 'blaze-slider/dist/blaze.css'
 import Image from 'next/image'
