@@ -37,5 +37,6 @@ export const getSubscriptionStatus = async () => {
     if (error) {
       console.log(error);
     }
+    return false;
   }
 };

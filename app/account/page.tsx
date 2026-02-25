@@ -1,7 +1,7 @@
 "use client";
 
-import PremiumContent from "../../components/PremiumContent";
-import StandardContent from "../../components/StandardContent";
+// import PremiumContent from "../../components/PremiumContent";
+// import StandardContent from "../../components/StandardContent";
 import React, { useEffect, useState } from "react";
 import { auth } from "@/firebase";
 import { signOut } from "firebase/auth";
@@ -10,6 +10,12 @@ import { loadCheckout, loadPortal } from "../stripe/stripePayment"
 import { getSubscriptionStatus } from "../stripe/getPremiumStatus";
 
 export default function page() {
+
+  interface statusProps {
+    premiumStatus: boolean
+  }
+
+
   const username = auth.currentUser?.displayName;
   const email = auth.currentUser?.email;
     const router = useRouter();
@@ -47,7 +53,7 @@ export default function page() {
         <div className="userInfo__email">{email}</div>
       </div>
 
-      {isPremium ? <PremiumContent /> : <StandardContent />}
+      {/* {isPremium ? <PremiumContent /> : <StandardContent />} */}
 
       <button
         onClick={isPremium ? manageSubscription : upgradeToPremium}
