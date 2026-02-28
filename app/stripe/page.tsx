@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import {
   Elements,
@@ -11,8 +11,6 @@ import {
   useElements,
 } from '@stripe/react-stripe-js'
 import { useSearchParams } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
-import SearchBox from '@/components/SearchBox'
 import Link from 'next/link'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || '')
@@ -241,7 +239,8 @@ const plans: { [key: string]: PlanDetails } = {
   },
 }
 
-export default function CheckoutPage() {
+// ✅ Inner component that uses useSearchParams
+function CheckoutPageInner() {
   const searchParams = useSearchParams()
   const planKey = searchParams.get('plan') || 'premium'
   const plan = plans[planKey] || plans.premium
@@ -334,5 +333,14 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+// ✅ Default export wraps inner component in Suspense
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className='min-h-screen bg-gradient-to-r from-teal-500 to-teal-600 flex items-center justify-center text-white text-xl'>Loading...</div>}>
+      <CheckoutPageInner />
+    </Suspense>
   )
 }
