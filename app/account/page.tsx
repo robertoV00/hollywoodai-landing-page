@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 // import PremiumContent from "../../components/PremiumContent";
 // import StandardContent from "../../components/StandardContent";
 import React, { useEffect, useState } from "react";

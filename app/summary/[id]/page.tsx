@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import Sidebar from '@/components/Sidebar'
 import LoginModal from '@/components/modals/LoginModal'
 import { ClockIcon, StarIcon } from '@heroicons/react/24/outline'
