@@ -71,7 +71,7 @@ export default function Favorites() {
 
   useEffect(() => {
     if (movies.length > 0) {
-      const el = document.querySelector('.blaze-slider')
+      const el = document.querySelector('.blaze-slider') as HTMLElement
       if (el) {
         // Destroy existing slider if it exists
         const existingSlider = (el as any).blazeSlider

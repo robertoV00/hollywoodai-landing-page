@@ -61,7 +61,6 @@ export default function SelectedMovies() {
         slideGap: '16px',
         transitionDuration: 500,
         loop: false,
-        enableMouseEvents: false,
       },
       '(max-width: 1300px)' : {
         slidesToShow: 5
