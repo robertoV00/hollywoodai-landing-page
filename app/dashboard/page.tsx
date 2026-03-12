@@ -14,10 +14,12 @@ export default function page() {
   return (
     <>
       
-      <div className='flex w-full'>
-          <Sidebar />
-          <Dashboard />
-      </div>
+      <div className='flex min-h-screen'>
+    <Sidebar />
+    <div className='flex-1 min-w-0'>
+        <Dashboard />
+    </div>
+</div>
     </>
   )
 }
