@@ -96,14 +96,17 @@ export default function Page({ params }: { params: { id: string } }) {
                     <Sidebar />
                     <div className='w-full'>
                         <SearchBox />
-                        <div className='p-14 pl-48 pr-48 flex gap-8'>
-                            <div className='flex-1'>
-                                <div className='border-b-2 pb-4'>
+                        <div className='p-14 pl-13 pr-13 2xl:pl-48 2xl:pr-48 flex flex-col lg:flex-row gap-8'>
+                            <div className='image-container-skeleton w-[250px] flex-shrink-0 m-auto lg:m-0'>
+                                <Skeleton height={350} width='100%' />
+                            </div>
+                            <div className='movie-information-container-skeleton flex-1'>
+                                <div className='movie-stats-container-skeleton border-b-2 pb-4'>
                                     <Skeleton height={40} width='40%' className='mb-4' />
                                     <Skeleton height={20} width='20%' className='mb-4'/>
                                     <Skeleton height={20} width='25%' className=''/>
                                 </div>
-                                <div className='flex gap-5 mb-8 border-b-2 flex-col pt-8 pb-8'>
+                                <div className='summary-container-skeleton flex gap-5 mb-8 border-b-2 flex-col pt-8 pb-8'>
                                       <Skeleton height={20} width='10%' />
                                       <Skeleton height={20} width='10%' />
                                 </div>
@@ -121,9 +124,6 @@ export default function Page({ params }: { params: { id: string } }) {
                                   
                                 </div>
                             </div>
-                            <div className='w-[250px] flex-shrink-0'>
-                                <Skeleton height={350} width='100%' />
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -138,14 +138,15 @@ export default function Page({ params }: { params: { id: string } }) {
             <Sidebar />
             <div className='w-full'>
                 <SearchBox />
-                <div className='p-14 pl-48 pr-48 flex gap-8'>
-                    <div className='flex-1'>
-                        <div className='border-b-2'>
-                            <h1 className='text-4xl font-bold mb-2'>{movie.title}</h1>
-                            <p className='text-gray-500 mb-6'>{movie.director}</p>
-                        </div>
+                <div className='master-container p-14 pl-13 pr-13 2xl:pl-48 2xl:pr-48 flex flex-col lg:flex-row gap-8'>
+                    <div className='movie-information-container flex-1'>
+                          <div className='movie-title-container border-b-2'>
+                    
+                              <h1 className='text-4xl font-bold mb-2'>{movie.title}</h1>
+                              <p className='text-gray-500 mb-6'>{movie.director}</p>
+                          </div>
 
-                          <div className='flex gap-5 mb-8 border-b-2 flex-col pt-8 pb-8'>
+                          <div className='movie-stats-container flex gap-5 mb-8 border-b-2 flex-col pt-8 pb-8'>
                               <div className='icons-left-side flex items-center gap-2'>
                                   <StarIcon className='h-5 w-5'/>
                                   <span className='text-sm'>{movie.rating} / 10</span>
@@ -166,10 +167,10 @@ export default function Page({ params }: { params: { id: string } }) {
 
                         </div>
 
-                        <div className='summary-container flex gap-4 mb-8 flex-col'>
+                        <div className='summary-container flex gap-4 mb-4 flex-col'>
                             <button 
                               onClick={handleSummarizeClick}
-                              className='bg-purple-700 text-white px-8 py-2 rounded-md font-semibold flex items-center gap-2 justify-center h-[50px] w-[300px] hover:bg-purple-800'>
+                              className='bg-purple-700 text-white px-8 py-2 rounded-md font-semibold flex items-center gap-2 justify-center h-[50px] w-[100%] sm:w-[300px] hover:bg-purple-800'>
                                 Summarize <BoltIcon height={20}/>
                             </button>
                             <button 
@@ -181,7 +182,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
                         <div>
                             <h2 className='text-xl font-bold mb-4'>What's it about?</h2>
-                            <div className='flex gap-2 mb-4'>
+                            <div className='flex flex-wrap gap-2 mb-4'>
                               {(Array.isArray(movie.tags)
                                 ? movie.tags
                                 : (typeof movie.tags === 'string' ? movie.tags.split(',').map((t:string)=>t.trim()) : [])
@@ -194,9 +195,9 @@ export default function Page({ params }: { params: { id: string } }) {
                             </p>
                         </div>
                     </div>
-
-                    <div className='flex-shrink-0'>
-                        <div className='w-50 h-80 bg-gray-200 rounded-lg overflow-hidden'>
+                    
+                    <div className='image-container flex-shrink-0 order-first lg:order-last w-[200px] m-auto lg:m-0'>
+                        <div className='w-55 h-80 bg-gray-200 rounded-lg overflow-hidden'>
                             <Image 
                             src={movie.imageLink}
                             alt={movie.title}
@@ -204,7 +205,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             height={384}
                             className='w-full h-full object-cover'
                             />
-                        </div>
+                            </div>
                     </div> 
                 </div>
             </div>

@@ -14,7 +14,7 @@ export default function page() {
   return (
     <>
       
-      <div className='flex mx-auto min-h-screen'>
+      <div className='flex w-full'>
           <Sidebar />
           <Dashboard />
       </div>

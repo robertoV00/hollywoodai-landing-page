@@ -30,7 +30,7 @@ export default function Sidebar() {
         {/* Mobile hamburger menu button - visible only on screens < 764px */}
         <button
           onClick={toggleSidebar}
-          className='lg:hidden fixed top-4 right-4 z-50 p-2 rounded-lg  text-black hover:bg-gray-300 transition'
+          className='md:hidden fixed top-4 right-4 z-50 p-2 rounded-lg  text-black hover:bg-gray-300 transition'
           aria-label='Toggle sidebar'
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-7">
@@ -42,22 +42,22 @@ export default function Sidebar() {
         {/* Overlay for mobile - visible when sidebar is open */}
         {isSidebarOpen && (
           <div
-            className='lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30'
+            className='md:hidden fixed inset-0 bg-black bg-opacity-50 z-30'
             onClick={closeSidebar}
           />
         )}
 
         {/* Sidebar - slides away on screens smaller than 764px (lg breakpoint) */}
-        <nav className={`fixed lg:sticky top-0 left-0 h-screen flex lg:flex p-3 border border-gray-200 shadow-none w-[300px] md:w-[250px] transition-transform duration-300 ease-in-out z-40 ${
+        <nav className={`fixed md:sticky top-0 left-0 h-screen flex md:flex p-3 border border-gray-200 shadow-none w-[300px] md:w-[250px] transition-transform duration-300 ease-in-out z-40 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:relative lg:w-[250px] lg:border-r lg:shadow-none pl-5 bg-white`}>
+        } md:translate-x-0 md:w-[250px] md:border-r md:shadow-none pl-5 bg-white`}>
             {/* Close button for mobile */}
             <button
               onClick={(e) => {
                 e.stopPropagation()
                 closeSidebar()
               }}
-              className='lg:hidden absolute top-4 right-4 p-1 z-50 pointer-events-auto'
+              className='md:hidden absolute top-4 right-4 p-1 z-50 pointer-events-auto'
               aria-label='Close sidebar'
             >
               <XMarkIcon className='h-6 w-6' />

@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import BlazeSlider from 'blaze-slider'
 import 'blaze-slider/dist/blaze.css'
 import Image from 'next/image'
@@ -35,6 +35,8 @@ export default function Favorites() {
   const user = useSelector((state: RootState) => state.user)
   const movies = useSelector((state: RootState) => state.favorites.movies)
   const isSubscribed = user?.isSubscribed || false
+  const sliderRef = useRef<HTMLDivElement | null>(null)
+  const sliderInstance = useRef<any>(null)
 
   // Load favorites from localStorage on mount
   useEffect(() => {
@@ -48,52 +50,37 @@ export default function Favorites() {
     }
   }, [dispatch])
 
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth
-      if (width < 560) {
-        setSlidesToShow(2)
-      } else if (width < 764) {
-        setSlidesToShow(2)
-      } else if (width < 980) {
-        setSlidesToShow(3)
-      } else if (width < 1200) {
-        setSlidesToShow(3)
-      } else if (width < 1290) {
-        setSlidesToShow(4)
-      } else {
-        setSlidesToShow(5)
-      }
-    }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
 
   useEffect(() => {
-    if (movies.length > 0) {
-      const el = document.querySelector('.blaze-slider') as HTMLElement
-      if (el) {
-        // Destroy existing slider if it exists
-        const existingSlider = (el as any).blazeSlider
-        if (existingSlider) {
-          existingSlider.destroy()
-        }
-        
-        // Create new slider
-        const slider = new BlazeSlider(el, {
-            all: {
-                slidesToShow: slidesToShow,
-                slideGap: "16px",
-                transitionDuration: 500,
-                loop: false,      
-            }
-        })
-        ;(el as any).blazeSlider = slider
-      }
+    if (!sliderRef.current || movies.length === 0) return
+
+    // destroy previous instance
+    if (sliderInstance.current) {
+      sliderInstance.current.destroy()
     }
-  }, [movies, slidesToShow])
+
+    sliderInstance.current = new BlazeSlider(sliderRef.current, {
+      all: {
+        slidesToShow: 7,
+        slideGap: '16px',
+        transitionDuration: 500,
+        loop: false,
+      },
+      '(max-width: 1300px)' : {
+        slidesToShow: 5
+      },
+      '(max-width: 1200px)' : {
+        slidesToShow: 4
+      },
+      '(max-width: 980px)' : {
+        slidesToShow: 3
+      },
+      '(max-width: 600px)' : {
+        slidesToShow: 2
+      }
+
+    })
+  }, [movies])
 
   if (movies.length === 0) {
     return (
@@ -114,7 +101,7 @@ export default function Favorites() {
         <Sidebar />
         <div className='w-full page-container'>
         <SearchBox />
-          <div className='p-20 lg:pl-40 lg:pr-40 pl-10 pr-10 md:pl-20 md:pr-20 entire-container'>
+          <div className='pt-20 2xl:pl-40 2xl:pr-40 pl-10 pr-10 entire-container'>
             <h1 className='font-bold text-[26px] mb-2'>Saved Movies</h1>
             
             {loading ? (
@@ -133,64 +120,60 @@ export default function Favorites() {
               </>
             ) : (
               <>
-                <h3 className='text-gray-400 mb-6 border-gray-200 border-b-2 pb-6 text-[20px] '>{movies.length} {movies.length === 1 ? 'Movie' : 'Movies'}</h3>
+              <h3 className='text-gray-400 mb-6 border-gray-200 border-b-2 pb-6 text-[20px]'>{movies.length} {movies.length === 1 ? 'Movie' : 'Movies'}</h3>
 
-                <div className="slider-row">
-                  <div className='flex flex-wrap gap-4 w-full'>
-                          {movies.map((movie) => (
-                        
-                        <div key={movie.id} className='movie-box w-[160px] h-[260px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
+              <div className="blaze-slider" ref={sliderRef}>
+                <div className="blaze-container">
+                  <div className="blaze-track-container">
+                    <div className="blaze-track">
+                      {movies.map((movie) => (
+                        <div key={movie.id} className='movie-card w-[160px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
+                          {/* Premium pill */}
+                          {!isSubscribed && movie.subscriptionRequired && (
+                            <div className='absolute -top-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-700/70 to-purple-800/70 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs font-bold z-10 overflow-visible shadow-lg'>
+                              Premium
+                            </div>
+                          )}
 
-
-                              <div className='premium-pill w-full h-full group cursor-pointer rounded-lg overflow-hidden'>
-
-                                {/* Premium pill */}
-                                {!isSubscribed && movie.subscriptionRequired && (
-                                  <div className='premium-pill absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10'>
-                                    Premium
-                                  </div>
-                                )}
-                              <Image
-                                  src={movie.imageLink}
-                                  alt={movie.title}
-                                  fill
-                                  className='object-cover rounded-2xl'
-                                  />
-                              
-
-
-                              {/* Hover overlay */}
-                              <div className='hover-overlay-container absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100'>
-                                  <h3 className='text-white text-sm font-bold mb-1 line-clamp-2'>{movie.title}</h3>
-                                  <p className='text-gray-300 text-xs mb-2'>{movie.director}</p>
-                                  <div className='flex items-center gap-1'>
-                                  <span className='text-yellow-400'>⭐</span>
-                                  <span className='text-white text-sm font-semibold'>{movie.rating}</span>
-                                  </div>
-                                  
+                          <div className='relative h-[250px] group cursor-pointer rounded-lg overflow-hidden'>
+                            <Image
+                              src={movie.imageLink}
+                              alt={movie.title}
+                              fill
+                              className='object-cover'
+                            />
+                            
+                            {/* Hover overlay */}
+                            <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100'>
+                              <h3 className='text-white font-bold mb-1'>{movie.title}</h3>
+                              <p className='text-gray-300 text-xs mb-2'>{movie.director}</p>
+                              <div className='flex items-center gap-1'>
+                                <span className='text-yellow-400'>⭐</span>
+                                <span className='text-white text-sm font-semibold'>{movie.rating}</span>
                               </div>
-                              </div>
-                              <div className='relative inset-0 bg-black bg-opacity-0 transition-all duration-300 flex flex-col justify-end p-3'>
-                                  <h3 className='text-black text-sm text-[17px] font-bold mb-1 line-clamp-2'>{movie.title}</h3>
-                                  <p className='text-gray-500 text-xs mb-2'>{movie.director}</p>
-                                  <div className='flex items-center gap-1'>
-                                  <span className='text-gray-500'>
-                                      <ClockIcon className='h-4'/>
-                                  </span>
-                                  <span className='text-gray-500'>
-                                      <StarIcon className='h-4'/>
-                                  </span>
-                                  <span className='text-gray-500 text-sm font-semibold'>{movie.rating}</span>
-                                  </div>
-                              </div>
+                            </div>
                           </div>
 
-
+                          <div className='mt-2'>
+                            <h3 className='text-black text-sm font-bold break-words'>{movie.title}</h3>
+                            <p className='text-gray-500 text-xs mb-1 break-words'>{movie.director}</p>
+                            <div className='flex items-center gap-1'>
+                              <span className='text-gray-500'>
+                                <ClockIcon className='h-4'/>
+                              </span>
+                              <span className='text-gray-500'>
+                                <StarIcon className='h-4'/>
+                              </span>
+                              <span className='text-gray-500 text-xs font-semibold'>{movie.rating}</span>
+                            </div>
+                          </div>
+                        </div>
                       ))}
+                    </div>
                   </div>
-                  
                 </div>
-              </>
+              </div>
+            </>
             )}
           </div>
         </div>

@@ -67,8 +67,8 @@ export default function SearchBox() {
   }
 
   return (
-    <div className='h-[80px] search-box-container border-b w-[100%] 2xl:pl-48 2xl:pr-48 md:pl-10 md:pr-10 sm:pl-10 relative '>
-      <div className='relative lg:w-[500px] md:w-[400px] w-[350px] top-5 transition-all duration-300'>
+    <div className='h-[80px] search-box-container border-b w-[100%] pl-10 2xl:pl-48 relative '>
+      <div className='relative w-[250px] sm:w-[50%] top-5 transition-all duration-300'>
         <input
           placeholder='Search for movies...'
           className='bg-gray-200 w-full h-[40px] border-none outline-none rounded-full p-5 pl-12 text-sm'

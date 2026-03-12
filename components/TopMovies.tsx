@@ -98,7 +98,7 @@ export default function TopMovies() {
   }
 
   return (
-    <div className="top-movies-master-container p-8 pt-5 w-[100%] 2xl:pl-48 2xl:pr-48 md:pl-10 md:pr-10">
+    <div className="top-movies-master-container p-8 pt-5 2xl:pl-48 2xl:pr-48 pl-10 pr-10">
       <h1 className='font-bold text-[26px] mb-2'>Top Movies</h1>
       <h4 className='text-gray-500 mb-6'>Enjoy our highest rated films.</h4>
 
@@ -107,14 +107,14 @@ export default function TopMovies() {
         <div className="blaze-track-container">
           <div className="blaze-track">
           {movies.map((movie) => (
-            <div key={movie.id} className='w-[160px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
+            <div key={movie.id} className='relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
               {/* Premium pill */}
               {!isSubscribed && movie.subscriptionRequired && (
-                <div className='absolute -top-0 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold z-10 overflow-visible'>
+                <div className='premium-pill absolute w-[100px] top-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-700/70 to-purple-800/70 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs text-center font-bold z-10 overflow-visible shadow-lg'>
                   Premium
                 </div>
               )}
-              <div className='relative w-full h-[250px] group cursor-pointer rounded-lg overflow-hidden'>
+              <div className='relative h-[250px] cursor-pointer rounded-lg overflow-hidden'>
                 <Image
                   src={movie.imageLink}
                   alt={movie.title}
