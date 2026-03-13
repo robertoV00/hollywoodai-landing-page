@@ -134,9 +134,9 @@ export default function Page({ params }: { params: { id: string } }) {
     return (
     <>
         {/* <LoginModal className=""/> */}
-        <div className='flex'>
+        <div className='flex min-h-screen'>
             <Sidebar />
-            <div className='w-full'>
+            <div className='flex-1 min-w-0'>
                 <SearchBox />
                 <div className='master-container p-14 pl-13 pr-13 2xl:pl-48 2xl:pr-48 flex flex-col lg:flex-row gap-8'>
                     <div className='movie-information-container flex-1'>
@@ -147,25 +147,20 @@ export default function Page({ params }: { params: { id: string } }) {
                           </div>
 
                           <div className='movie-stats-container flex gap-5 mb-8 border-b-2 flex-col pt-8 pb-8'>
-                              <div className='icons-left-side flex items-center gap-2'>
+                              <div className='flex items-center gap-4'>
                                   <StarIcon className='h-5 w-5'/>
                                   <span className='text-sm'>{movie.rating} / 10</span>
-                                  <div className="clock-icon-box-position flex relative left-20 gap-2">
-                                    <ClockIcon className='h-5 w-5'/>
-                                    <span className='text-sm'>10:00</span>
-                                  </div>
+                                  <ClockIcon className='h-5 w-5'/>
+                                  <span className='text-sm'>10:00</span>
                               </div>
                               
-                              <div className='icons-right-side flex items-center gap-2'>
+                              <div className='flex items-center gap-4'>
                                   <MicrophoneIcon className='h-5 w-5'/>
                                   <span className='text-sm'>{movie.type}</span>
-                                  <div className="calendar-icon-box-position flex gap-2 relative left-12">
-                                    <CalendarDateRangeIcon className='h-5 w-5'/>
-                                    <span className='text-sm'>{movie.releaseYear}</span>
-                                  </div>
+                                  <CalendarDateRangeIcon className='h-5 w-5'/>
+                                  <span className='text-sm'>{movie.releaseYear}</span>
                               </div>
-
-                        </div>
+                          </div>
 
                         <div className='summary-container flex gap-4 mb-4 flex-col'>
                             <button 

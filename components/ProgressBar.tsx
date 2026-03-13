@@ -32,16 +32,16 @@ export const ProgressBar = () =>{
     };
 
   return (
-    <div className="progress-bar-container flex items-center justify-center gap-5 w-full text-white">
-      <span>{formatTime(timeProgress)}</span>
+    <div className="progress-bar-container flex items-center justify-center gap-2 md:w-full w-[100%] min-w-0 text-white overflow-hidden">
+      <span className='flex-shrink-0'>{formatTime(timeProgress)}</span>
       <input
-        className="progress-bar max-w-[100%] bg-gray-300 h-1"
+        className="progress-bar w-full min-w-0 bg-gray-300 h-1"
         ref={progressBarRef}
         type="range"
         defaultValue="0"
         onChange={handleProgressChange}
       />
-      <span>{formatTime(duration)}</span>
+      <span className='flex-shrink-0'>{formatTime(duration)}</span>
     </div>
   );
 };

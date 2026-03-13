@@ -64,10 +64,10 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
       <div className='flex h-screen bg-white'>
         <Sidebar />
         
-        <div className='flex-1 flex flex-col'>
+        <div className='flex-1 flex flex-col min-w-0'>
           <SearchBox />
           {/* Main content area */}
-          <div className='flex-1 overflow-y-auto p-8 flex justify-center'>
+          <div className='main-content flex-1 overflow-y-auto p-8 pl-10 pr-10 2xl:pl-48 2xl:pr-48 flex flex-col md:flex-row justify-center'>
             <div className='max-w-7xl'>
               <h1 className='movie-title text-3xl font-bold text-black mb-4 pb-4 border-b border-gray-300'>{movie.title}</h1>              
               <div className='text-black space-y-4 pt-5 mb-8'>
@@ -79,34 +79,23 @@ export default function PlayerPage({ params }: { params: { id: string } }) {
               </div>
             </div>
           </div>
-
-        <div className=''>
-          {/* Audio Player at bottom */}
-          <div className='bg-gray-800 border-t border-gray-700 p-2'>
-            <div className='max-w-6xl mx-auto flex items-center justify-between'>
-              {/* Track Info - Left */}
-              <div className='flex-shrink-0 flex items-center text-white'>
-                <TrackInfo movieId={params.id} />
-                <div>
-                  
-                </div>
-              </div>
-
-              {/* Controls - Center */}
-              <div className='flex-1 flex justify-center px-4'>
-                <Controls />
-              </div>
-
-              {/* Progress Bar - Right */}
-              <div className='flex-shrink-0 w-32'>
-                <ProgressBar />
-              </div>
-            </div>
-          </div>
-        </div>
-
         </div>
       </div>
-    </AudioPlayerProvider>
+
+      {/* Audio Player - full width outside the flex container */}
+      <div className='player-master-container fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 p-2 z-50'>
+        <div className='player-row max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2'>
+          <div className='flex-shrink-0 flex items-center justify-start text-white'>
+            <TrackInfo movieId={params.id} />
+          </div>
+          <div className='flex-1 flex justify-center px-4'>
+            <Controls />
+          </div>
+          <div className='flex-1 min-w-0 md:max-w-[250px] w-[400px] justify-end'>
+            <ProgressBar />
+          </div>
+        </div>
+      </div>
+      </AudioPlayerProvider>
   )
 }
