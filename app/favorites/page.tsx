@@ -129,7 +129,7 @@ export default function Favorites() {
                       {movies.map((movie) => (
                         <div key={movie.id} className='movie-card w-[160px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
                           {/* Premium pill */}
-                          {!isSubscribed && movie.subscriptionRequired && (
+                          {movie.subscriptionRequired && user?.subscriptionType === 'basic' && (
                             <div className='absolute -top-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-700/70 to-purple-800/70 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs font-bold z-10 overflow-visible shadow-lg'>
                               Premium
                             </div>

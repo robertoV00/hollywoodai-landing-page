@@ -66,13 +66,13 @@ export default function Page({ params }: { params: { id: string } }) {
       }
 
       // Logged in - check subscription
-      if (movie.subscriptionRequired && !isSubscribed) {
-        // Premium movie and not subscribed - send to plans page
+      if (movie.subscriptionRequired && user?.subscriptionType === 'basic') {
+        // Premium movie and basic tier user - send to plans page
         router.push('https://hollywoodai.vercel.app/plans')
         return
       }
 
-      // Free movie or subscribed - send to player
+      // Free movie or premium/vip+ tier subscriber - send to player
       router.push(`/player/${movieId}`)
     }
 

@@ -110,7 +110,7 @@ export default function SelectedMovies() {
           {movies.map((movie) => (
             <div key={movie.id} className='movie-card relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
               {/* Premium pill */}
-              {!isSubscribed && movie.subscriptionRequired && (
+              {movie.subscriptionRequired && user?.subscriptionType === 'basic' && (
                 <div className='premium-pill absolute w-[100px] top-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-700/70 to-purple-800/70 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs text-center font-bold z-10 overflow-visible shadow-lg'>
                   Premium
                 </div>
