@@ -17,29 +17,32 @@ export default function PlansPage() {
   const dispatch: AppDispatch = useDispatch()
   const user = useSelector((state: RootState) => state.user)
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null)
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState<string | null>(null)
 
   const priceIds: { [key: string]: string } = {
-    premium: 'price_1Svi6NKjhcxrXZvokEeFBQY8',
-    vip: 'price_1SxXsdKjhcxrXZvoaqKYSIt4',
+    premium: 'price_1T7f3FKjhcxrXZvoIIAi8Z8K',
+    vip: 'price_1T7f4JKjhcxrXZvos6BgpF2t',
   }
 
   const isGuestOrLoggedOut = !user?.uid || user?.email === 'guest12345@gmail.com'
 
   const handleChoosePlan = async (planName: string) => {
-    if (isGuestOrLoggedOut) {
-      dispatch(openLoginModal())
-      return
-    }
-
-    const planKey = planName.toLowerCase() === 'premium' ? 'premium' : 'vip'
-    const priceId = priceIds[planKey]
-    
-    if (priceId) {
-      await loadCheckout(priceId)
-    } else {
-      console.error('Invalid plan selected')
-    }
+  if (isGuestOrLoggedOut) {
+    dispatch(openLoginModal())
+    return
   }
+
+  const planKey = planName.toLowerCase() === 'premium' ? 'premium' : 'vip'
+  const priceId = priceIds[planKey]
+
+  if (priceId && user?.uid) {
+    setIsCheckoutLoading(planName)
+    await loadCheckout(priceId, user.uid)
+    setIsCheckoutLoading(null)
+  } else {
+    console.error('Invalid plan or missing user')
+  }
+}
 
   const faqs = [
     {
@@ -182,18 +185,28 @@ export default function PlansPage() {
 
                   {/* CTA Button */}
                   <button
-                    onClick={() => handleChoosePlan(plan.name)}
-                    disabled={isDisabled}
-                    className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-                      isDisabled
-                        ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
-                        : plan.highlighted
-                        ? 'bg-purple-800 text-white hover:bg-purple-700'
-                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                    }`}
-                  >
-                    {isGuestOrLoggedOut && plan.name !== 'Basic' ? 'Account Required' : plan.cta}
-                  </button>
+                  onClick={() => handleChoosePlan(plan.name)}
+                  disabled={plan.ctaDisabled || isCheckoutLoading === plan.name}
+                  className={`w-full py-3 rounded-lg font-semibold transition-colors ${
+                    plan.ctaDisabled
+                      ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
+                      : isGuestOrLoggedOut && plan.name !== 'Basic'
+                      ? 'bg-gray-400 text-white hover:bg-gray-500'
+                      : plan.highlighted
+                      ? 'bg-purple-800 text-white hover:bg-purple-700'
+                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                  }`}
+                >
+                  {isCheckoutLoading === plan.name ? (
+                    <span className='flex items-center justify-center gap-2'>
+                      <svg className='animate-spin h-4 w-4' viewBox='0 0 24 24' fill='none'>
+                        <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'/>
+                        <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v8z'/>
+                      </svg>
+                      Loading...
+                    </span>
+                  ) : isGuestOrLoggedOut && plan.name !== 'Basic' ? 'Account Required' : plan.cta}
+                </button>
                 </div>
               )
             })}
