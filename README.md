@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🎬 HollywoodAI — AI-Powered Movie Summary Platform
 
-## Getting Started
+> Instantly digest any movie in minutes with high-quality AI-generated summaries and audio playback.
 
-First, run the development server:
+**Live Demo:** [hollywoodai.vercel.app](https://hollywood-ai-ivory.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Overview
+
+HollywoodAI is a full-stack SaaS web application that leverages artificial intelligence to deliver 
+instant movie summaries with audio narration. Removing the need to spend hours watching content 
+before deciding if it's worth your time.
+
+Built with a focus on real-world product engineering, HollywoodAI includes a complete 
+authentication system, subscription-based access control, Stripe payment integration, 
+and a fully responsive UI. Mirroring the architecture of production-grade consumer applications.
+
+---
+
+## ✨ Key Features
+
+- 🤖 **AI-Generated Summaries** — Instant, high-quality movie summaries powered by AI
+- 🔊 **Audio Playback** — Listen to summaries with a full-featured audio player (play, pause, skip, progress bar)
+- 🔐 **Authentication** — Email/password and Google OAuth via Firebase Auth
+- 💳 **Stripe Payments** — Full subscription flow with Premium and VIP+ tiers via Stripe + Firebase Extension
+- 🔒 **Access Control** — Role-based content gating (Basic / Premium / VIP+)
+- ❤️ **Favorites** — Save and manage favorite movies with persistent state
+- 🔍 **Live Search** — Debounced real-time movie search
+- 📱 **Fully Responsive** — Optimized across all screen sizes
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| State Management | Redux Toolkit |
+| Authentication | Firebase Auth (Email + Google OAuth) |
+| Database | Firebase Firestore |
+| Payments | Stripe + Firestore Stripe Payments Extension |
+| Deployment | Vercel |
+
+---
+
+## 🏗 Architecture Highlights
+
+- **App Router** with dynamic routes (`/summary/[id]`, `/player/[id]`) for SEO-friendly movie pages
+- **Redux** for global state management across auth, favorites, and modal flows
+- **Firebase Firestore** as the backend database with real-time listeners for Stripe checkout sessions
+- **Stripe webhook integration** via Firebase Extension for subscription lifecycle management
+- **Protected routes** with subscription tier checking before granting content access
+- **Custom audio player** built from scratch with `useContext`, `useRef`, and `requestAnimationFrame`
+
+---
+
+## 🚦 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- Firebase project with Firestore and Authentication enabled
+- Stripe account with the Firestore Stripe Payments extension installed
+
+---
+
+## 📁 Project Structure
+```
+├── app/
+│   ├── Dashboard/        # Main dashboard page
+│   ├── summary/[id]/     # Movie detail & summary page
+│   ├── player/[id]/      # Audio player page
+│   ├── favorites/        # Saved movies page
+│   ├── plans/            # Subscription plans & Stripe checkout
+│   ├── account/          # User account management
+│   └── stripe/           # Stripe payment utilities
+├── components/           # Reusable UI components
+├── redux/                # Redux store, slices
+├── data/                 # Data fetching utilities
+└── public/               # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 👨‍💻 Author
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**Roberto V.**
+[GitHub](https://github.com/robertoV00) • [Live Demo](https://hollywood-ai-ivory.vercel.app)
