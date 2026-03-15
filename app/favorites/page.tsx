@@ -127,15 +127,15 @@ export default function Favorites() {
                   <div className="blaze-track-container">
                     <div className="blaze-track">
                       {movies.map((movie) => (
-                        <div key={movie.id} className='movie-card w-[160px] relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
+                        <div key={movie.id} className='movie-card w-[150px] max-w-[150px] flex-shrink-0 relative cursor-pointer' onClick={() => router.push(`/summary/${movie.id}`)}>
                           {/* Premium pill */}
                           {movie.subscriptionRequired && user?.subscriptionType === 'basic' && (
-                            <div className='absolute -top-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-700/70 to-purple-800/70 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs font-bold z-10 overflow-visible shadow-lg'>
+                            <div className='premium-pill absolute w-[100px] top-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-700/70 to-purple-800/70 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-xs text-center font-bold z-10 overflow-visible shadow-lg'>
                               Premium
                             </div>
                           )}
 
-                          <div className='relative h-[250px] group cursor-pointer rounded-lg overflow-hidden'>
+                          <div className='relative h-[250px] w-[150px] group cursor-pointer rounded-lg overflow-hidden'>
                             <Image
                               src={movie.imageLink}
                               alt={movie.title}
